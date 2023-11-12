@@ -8,6 +8,17 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+.unselectable {
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+/Edge */
+  user-select: none;
+  /* Standard */
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -18,10 +29,113 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: black;
+}
+
+#background {
+  background-image: url("/background.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: scale(1.2);
+  transition: background-position 0.1s ease-out;
+  position: fixed;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+}
+
+.input {
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  padding: 1em;
+  background-color: #ccc;
+  box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
+  transition: 300ms ease-in-out;
+  width: 300px;
+  margin: 20px;
+  @apply unselectable;
+}
+
+.researchDiv {
+  margin-top: 15vh;
+  transition: 300ms ease-in-out;
+}
+
+.researchDiv:focus-within {
+  margin-top: -20vh;
+}
+
+.researchDiv:focus-within > div > h1,
+.researchDiv:focus-within > div > h2 {
+  color: rgba(0, 0, 0, 0);
+  transition: 300ms ease-in-out;
+}
+
+.input:focus {
+  color: black;
+  background-color: white;
+  transform: scale(1.05);
+  box-shadow: 13px 13px 100px #ffae1a, -13px -13px 100px #ffffff;
+  width: 70vw;
+  margin-top: 20px;
+}
+
+.glassBackground {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(18.2px);
+  -webkit-backdrop-filter: blur(18.2px);
+}
+
+.title {
+  text-align: center;
+  margin-top: 10vh;
+  opacity: 0.6;
+  @apply text-8xl unselectable;
+}
+
+.btn {
+  padding: 0.5em 0.5em;
+  margin: 3em;
+  background: none;
+  border: 2px solid #fff;
+  font-size: 15px;
+  color: #131313;
+  height: 20vh;
+  width: 20vh;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0);
+  font-weight: bolder;
+  /* box-shadow: 0 2px 0 2px #000; */
+}
+
+.btn:before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 120%;
+  background-color: #ffd700;
+  top: 50%;
+  transform: skewX(30deg) translate(-150%, -50%);
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background-color: rgba(255, 255, 255, 0.256);
+  color: rgb(0, 0, 0);
+  /* box-shadow: 0 2px 0 2px #0d3b66; */
+}
+
+.btn:hover::before {
+  transform: skewX(30deg) translate(150%, -50%);
+  transition-delay: 0.05s;
+}
+
+.btn:active {
+  transform: scale(0.9);
 }
