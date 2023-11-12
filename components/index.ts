@@ -4,5 +4,14 @@ import MouseEffect from "./MouseEffect";
 import ListItem from "./ListItem";
 import SearchBox from "./SearchBox";
 import CustomButton from "./CustomButton";
+import EarthCanvas from "./EarthCanvas";
 
-export { Loading, CustomInput, MouseEffect, ListItem, SearchBox, CustomButton };
+export {
+  Loading,
+  CustomInput,
+  MouseEffect,
+  ListItem,
+  SearchBox,
+  CustomButton,
+  EarthCanvas,
+};

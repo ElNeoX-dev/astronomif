@@ -1,10 +1,6 @@
-import { useState, useRef } from "react";
-import { Coustard } from "next/font/google";
-import { CustomInput, SearchBox } from "@/components";
+import { useState, useRef, ChangeEvent } from "react";
+import { CustomInput, SearchBox, EarthCanvas } from "@/components";
 import Head from "next/head";
-import Image from "next/image";
-
-const codystar = Coustard({ weight: "400", subsets: ["latin"] });
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +9,7 @@ export default function Home() {
 
   const debounceSearchRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsLoading(true);
     if (debounceSearchRef.current) {
       clearTimeout(debounceSearchRef.current);
@@ -22,13 +18,14 @@ export default function Home() {
       setSearchTerm(e.target.value);
     }, 1000);
   };
+
   return (
     <>
       <Head>
         <title>Astronom'IF</title>
       </Head>
       <div className="flex flex-col">
-        <h1 className={`${codystar.className} title mb-15`}>Astronom'IF</h1>
+        <h1 className="title mb-15">Astronom'IF</h1>
         <h2 className="font-thin opacity-50 text-center unselectable">
           The first dedicated astronomy search engine
         </h2>
@@ -43,13 +40,7 @@ export default function Home() {
             setIsLoading={setIsLoading}
           />
         )}
-        {/* <Image
-          src={"/logo.gif"}
-          alt="The logo gif"
-          width={200}
-          height={200}
-          unoptimized={true}
-        /> */}
+        <EarthCanvas />
       </div>
     </>
   );
