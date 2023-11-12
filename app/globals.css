@@ -44,6 +44,12 @@ body {
   height: 100vh;
 }
 
+.galaxy {
+  width: min(30vh, 20vw);
+  height: min(30vh, 20vw);
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
 .input {
   border: none;
   outline: none;
@@ -54,7 +60,6 @@ body {
   transition: 300ms ease-in-out;
   width: 300px;
   margin: 20px;
-  @apply unselectable;
 }
 
 .researchDiv {
@@ -97,13 +102,12 @@ body {
 
 .btn {
   padding: 0.5em 0.5em;
-  margin: 3em;
   background: none;
   border: 2px solid #fff;
   font-size: 15px;
   color: #131313;
-  height: 20vh;
-  width: 20vh;
+  height: 100%;
+  width: 100%;
   cursor: pointer;
   position: relative;
   overflow: hidden;

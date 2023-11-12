@@ -5,6 +5,8 @@ import ListItem from "./ListItem";
 import SearchBox from "./SearchBox";
 import CustomButton from "./CustomButton";
 import EarthCanvas from "./EarthCanvas";
+import GalaxyCanvas from "./GalaxyCanvas";
+import SunCanvas from "./SunCanvas";
 
 export {
   Loading,
@@ -14,4 +16,6 @@ export {
   SearchBox,
   CustomButton,
   EarthCanvas,
+  GalaxyCanvas,
+  SunCanvas,
 };
