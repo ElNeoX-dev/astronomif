@@ -16,6 +16,20 @@ const Sun = () => {
 
   return <primitive ref={ref} object={sun.scene} scale={1.0} position-y={0} />;
 };
+
+const Background = () => {
+  const stars = useGLTF("/models/Background_2/scene.gltf");
+  const ref = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (ref.current) {
+      ref.current.rotation.y += 0.005;
+    }
+  });
+
+  return <primitive ref={ref} object={stars.scene} scale={8.0} position-y={0} />;
+};
+
 const SunCanvas: React.FC = () => {
   return (
     <Canvas
@@ -32,6 +46,7 @@ const SunCanvas: React.FC = () => {
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls enableZoom={false} />
         <Sun />
+        <Background />
 
         <Preload all />
       </Suspense>
