@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
+import { CustomCanvas } from "@/components";
 
 import { searchPlanetById, renderSection } from "@/utils";
 import Link from "next/link";
@@ -67,14 +68,18 @@ const Planet: React.FC<PlanetProps> = () => {
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
             <div className="col-span-1 flex flex-col items-center">
-              <Image
+              <CustomCanvas 
+                modelPath={planet ? "/models/" + planet.name + "/scene.gltf" : "/models/unknown/scene.gltf"} />
+              <span></span>
+            </div>
+            <div className="col-span-1 flex flex-col items-center">
+            <Image
                 src={planet?.image ? planet.image : "/logo.gif"}
                 alt={planet?.name ? planet.name : "Loading"}
                 width={300}
                 height={300}
               />
-              <span></span>
-            </div>
+              </div>
             <div className="col-span-3">
               {planet?.description &&
                 renderSection("Description", planet.description)}
