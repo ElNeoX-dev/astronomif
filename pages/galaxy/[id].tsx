@@ -3,14 +3,14 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-import { searchStarById, searchStarByName } from "@/utils";
+import { searchGalaxyById, searchGalaxyByName } from "@/utils";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 
-interface StarProps {}
+interface GalaxyProps {}
 
-interface Star {
+interface Galaxy {
   name?: string;
   type?: string;
   distance?: string;
@@ -18,17 +18,17 @@ interface Star {
   description?: string;
 }
 
-const galaxy: React.FC<StarProps> = () => {
+const galaxy: React.FC<GalaxyProps> = () => {
   const router = useRouter();
 
   const { id } = router.query;
 
   const [loading, setLoading] = useState(true);
-  const [galaxy, setgalaxy] = useState<Star>();
+  const [galaxy, setGalaxy] = useState<Galaxy>();
 
   useEffect(() => {
     if (!id) return;
-    searchStarById(id as string)
+    searchGalaxyById(id as string)
       .then((response) => {
         const galaxy = (response as any)?.results?.bindings[0];
         console.log(galaxy);
@@ -36,7 +36,7 @@ const galaxy: React.FC<StarProps> = () => {
           for (const key in galaxy) {
             galaxy[key] = galaxy[key]?.value;
           }
-          setgalaxy(galaxy);
+          setGalaxy(galaxy);
         }
         setLoading(false);
       })

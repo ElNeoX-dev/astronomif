@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 
-import { searchPlanetById } from "@/utils";
+import { searchPlanetById, renderSection } from "@/utils";
 import Link from "next/link";
 
 interface PlanetProps {}
@@ -49,7 +49,7 @@ const Planet: React.FC<PlanetProps> = () => {
       <Head>
         <title>{(planet ? planet.name : "Loading") as ReactNode}</title>
       </Head>
-      <div className="flex flex-col flex-grow gap-4">
+      <div className="flex flex-col gap-2 py-2 px-4 overflow-y-scroll">
         <div className="flex flex-row justify-start">
           <Link href="/">
             <Image
@@ -64,21 +64,21 @@ const Planet: React.FC<PlanetProps> = () => {
             {(planet ? planet.name : "Loading") as ReactNode}
           </h1>
         </div>
-        <div className="grid grid-cols-4 gap-x-2 overflow-scroll">
-          <div className="col-span-1 flex flex-col items-center">
-            <Image
-              src={planet?.image ? planet.image : "/logo.gif"}
-              alt={planet?.name ? planet.name : "Loading"}
-              width={300}
-              height={300}
-            />
-            <span></span>
-          </div>
-          <div className="col-span-3">
-            <span>{planet?.description}</span>
-            <span>{planet?.description}</span>
-            <span>{planet?.description}</span>
-            <span>{planet?.description}</span>
+        <div className="overflow-x-hidden overflow-y-scroll text-justify">
+          <div className="grid grid-cols-4 gap-x-2">
+            <div className="col-span-1 flex flex-col items-center">
+              <Image
+                src={planet?.image ? planet.image : "/logo.gif"}
+                alt={planet?.name ? planet.name : "Loading"}
+                width={300}
+                height={300}
+              />
+              <span></span>
+            </div>
+            <div className="col-span-3">
+              {planet?.description &&
+                renderSection("Description", planet.description)}
+            </div>
           </div>
         </div>
       </div>

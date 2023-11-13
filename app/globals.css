@@ -97,7 +97,7 @@ body {
   text-align: center;
   /* margin-top: 10vh; */
   opacity: 0.6;
-  @apply text-8xl unselectable;
+  @apply text-8xl unselectable font-bold;
 }
 
 .btn {
@@ -116,6 +116,20 @@ body {
   background-color: rgb(0, 0, 0);
   font-weight: bolder;
   /* box-shadow: 0 2px 0 2px #000; */
+}
+
+.sectionTitle {
+  @apply font-bold opacity-60 unselectable text-4xl;
+}
+
+.sectionDescription {
+  @apply opacity-60 text-justify;
+}
+
+hr.rounded {
+  border-top: 2px solid #bbbbbb2e;
+  border-radius: 40px;
+  @apply my-1;
 }
 
 /*

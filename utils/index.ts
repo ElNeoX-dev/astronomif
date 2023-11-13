@@ -1,5 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 
+import { renderSection } from "./utils";
+
+export { renderSection };
+
 const prefixes =
   "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n\
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\
