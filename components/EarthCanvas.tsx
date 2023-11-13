@@ -18,6 +18,20 @@ const Earth = () => {
     <primitive ref={ref} object={earth.scene} scale={1.0} position-y={0} />
   );
 };
+
+const Background = () => {
+  const stars = useGLTF("/models/Background_1/scene.gltf");
+  const ref = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (ref.current) {
+      ref.current.rotation.y += 0.005;
+    }
+  });
+
+  return <primitive ref={ref} object={stars.scene} scale={8.0} position-y={0} />;
+};
+
 const EarthCanvas: React.FC = () => {
   return (
     <Canvas
@@ -34,6 +48,7 @@ const EarthCanvas: React.FC = () => {
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls enableZoom={false} />
         <Earth />
+        <Background />
 
         <Preload all />
       </Suspense>

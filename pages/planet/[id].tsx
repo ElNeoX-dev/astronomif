@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
+import { CustomCanvas } from "@/components";
 
 import { searchPlanetById, getWikipediaImage, renderSection } from "@/utils";
 import Link from "next/link";
@@ -95,8 +96,13 @@ const Planet: React.FC<PlanetProps> = () => {
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
+            <div className="col-span-1 flex flex-col items-center">
+              <CustomCanvas 
+                modelPath={planet ? "/models/" + planet.name + "/scene.gltf" : "/models/unknown/scene.gltf"} />
+              <span></span>
+            </div>
             <div className="col-span-1 flex flex-col items-left">
-              <Image className="mb-2"
+            <Image className="mb-2"
                 src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
                 alt={planet?.name || "Loading"}
                 width={300}

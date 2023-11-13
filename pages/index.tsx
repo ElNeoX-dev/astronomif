@@ -41,7 +41,7 @@ export default function Home() {
           width="300"
           alt="Astronom'IF Logo"
           className="logo-class"
-          style={{ maxWidth: "100px", margin: "0 auto", opacity: "0.55" }}
+          style={{ maxWidth: "100px", margin: "0 auto"}}
         />
         <h1 className="title mb-15">Astronom'IF</h1>
         <h2 className="font-thin opacity-50 text-center unselectable">

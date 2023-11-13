@@ -8,6 +8,7 @@ import CustomButton2 from "./CustomButton2";
 import EarthCanvas from "./EarthCanvas";
 import GalaxyCanvas from "./GalaxyCanvas";
 import SunCanvas from "./SunCanvas";
+import CustomCanvas from "./CustomCanvas";
 
 export {
   Loading,
@@ -20,4 +21,5 @@ export {
   EarthCanvas,
   GalaxyCanvas,
   SunCanvas,
+  CustomCanvas
 };
