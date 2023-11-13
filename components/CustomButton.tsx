@@ -1,12 +1,17 @@
 interface CustomButtonProps {
-  image: string;
   onClick: () => void;
+  children?: React.ReactNode;
+  state: boolean;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ image, onClick }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({
+  onClick,
+  children,
+  state,
+}) => {
   return (
     <button className="btn" onClick={onClick}>
-      <img src={image} alt="button gif" />
+      {children}
     </button>
   );
 };
