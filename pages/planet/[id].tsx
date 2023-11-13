@@ -3,17 +3,29 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 
-import { searchPlanetById, renderSection } from "@/utils";
+import { searchPlanetById, getWikipediaImage, renderSection } from "@/utils";
 import Link from "next/link";
+import { renderSubSection } from "@/utils/utils";
 
 interface PlanetProps {}
 
 interface Planet {
-  name?: string;
+  name: string;
   description?: string;
   image?: string;
-  distance?: string;
+  imageWikipedia?: string;
+  volume?: string;
   mass?: string;
+  gravity?: string;
+  radius?: string;
+  meanTemperature?: string;
+  minTemperature?: string;
+  maxTemperature?: string;
+  discovered?: string;
+  satelliteOf?: string;
+  surfaceArea?: string;
+  wikipedia: string;
+  wikiPageID: string;
 }
 
 const Planet: React.FC<PlanetProps> = () => {
@@ -36,12 +48,29 @@ const Planet: React.FC<PlanetProps> = () => {
           }
           setPlanet(planet);
         }
-        setLoading(false);
+
+        // setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         alert("Planet not found");
       });
+
+      getWikipediaImage(id as string)
+      .then((imageURL) => {
+        if (planet) {
+          planet.imageWikipedia = imageURL!;
+          setPlanet(planet);
+        }
+        console.log(imageURL);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Image not found");
+      });
+        
+      
   }, [id]);
 
   return (
@@ -61,19 +90,28 @@ const Planet: React.FC<PlanetProps> = () => {
             />
           </Link>
           <h1 className="title mb-15">
-            {(planet ? planet.name : "Loading") as ReactNode}
+            {(planet?.name || "Loading") as ReactNode}
           </h1>
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
-            <div className="col-span-1 flex flex-col items-center">
-              <Image
-                src={planet?.image ? planet.image : "/logo.gif"}
-                alt={planet?.name ? planet.name : "Loading"}
+            <div className="col-span-1 flex flex-col items-left">
+              <Image className="mb-2"
+                src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
+                alt={planet?.name || "Loading"}
                 width={300}
                 height={300}
               />
-              <span></span>
+                
+              <span className="flex-grow mr-2">
+                {planet?.mass && renderSubSection("Mass", planet.mass)}
+                {planet?.volume && renderSubSection("Volume", planet.volume)}
+                {planet?.radius && renderSubSection("Radius", planet.radius)}
+                {planet?.discovered && renderSubSection("Date of discover", planet.discovered)}
+                {(planet?.meanTemperature && planet?.minTemperature && planet?.maxTemperature ) && renderSubSection("Temperature", "Minimum : " + planet.minTemperature +"\nMaxmimum : " + planet.maxTemperature + "\nMean : " + planet.meanTemperature )}
+                {planet?.satelliteOf && renderSubSection("Satellite of", planet.satelliteOf)}
+                {planet?.surfaceArea && renderSubSection("Surface", planet.surfaceArea)}
+              </span>
             </div>
             <div className="col-span-3">
               {planet?.description &&

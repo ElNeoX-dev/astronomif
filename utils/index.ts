@@ -67,7 +67,7 @@ export const searchPlanetByName = async (
 export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
   const resourceId: string = `:${id}`;
   return await executeQuery(`
-        SELECT ?name ?image ?mass ?volume ?gravity ?description 
+        SELECT ?name ?image ?mass ?volume ?gravity ?radius ?minTemperature ?meanTemperature ?maxTemperature ?discovered ?satelliteOf ?surfaceArea ?wikipedia ?wikiPageID ?description 
         WHERE {
             ${resourceId} a dbo:Planet ;
                 foaf:name ?name .
@@ -75,6 +75,15 @@ export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
             OPTIONAL {${resourceId} dbo:mass ?mass .}
             OPTIONAL {${resourceId} dbo:volume ?volume .}
             OPTIONAL {${resourceId} dbo:gravity ?gravity .}
+            OPTIONAL {${resourceId} dbo:meanRadius ?radius .}
+            OPTIONAL {${resourceId} dbo:meanTemperature ?meanTemperature .}
+            OPTIONAL {${resourceId} dbo:minimumTemperature ?minTemperature .}
+            OPTIONAL {${resourceId} dbo:maximumTemperature ?maxTemperature .}
+            OPTIONAL {${resourceId} dbo:discovered ?discovered .}
+            OPTIONAL {${resourceId} dbo:satelliteOf ?satelliteOf .}
+            OPTIONAL {${resourceId} dbo:surfaceArea ?surfaceArea .}
+            OPTIONAL {${resourceId} dbo:isPrimaryTopicOf ?wikipedia .}
+            OPTIONAL {${resourceId} dbo:wikiPageID ?wikiPageID .}
             OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
         }
     `);
@@ -190,4 +199,22 @@ export const searchStarById = async (id: string): Promise<AxiosResponse> => {
             OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
         }
     `);
+};
+
+export const getWikipediaImage = async (id: string) => {
+  try {
+    const { data } = await axios.get("https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php", {
+      params: { action: "query", titles: id, prop:"pageimages", pithumbsize: 300, format: "json" },
+    });
+    
+    const pages = data.query.pages;
+    const pageId = Object.keys(pages)[0];
+
+    const imageUrl = pages[pageId].thumbnail?.source as string;
+
+    return imageUrl;
+  } catch (error) {
+    console.error("Error fetching Wikipedia image:", error);
+    return null;
+  }
 };
