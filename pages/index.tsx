@@ -10,9 +10,13 @@ import {
 import Head from "next/head";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<String>("");
+  const [isFocused, setIsFocused] = useState<Boolean>(false);
+
+  const [planetFilter, setPlanetFilter] = useState<Boolean>(false);
+  const [galaxyFilter, setGalaxyFilter] = useState<Boolean>(false);
+  const [starFilter, setStarFilter] = useState<Boolean>(false);
 
   const debounceSearchRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -31,7 +35,7 @@ export default function Home() {
       <Head>
         <title>Astronom'IF</title>
       </Head>
-      <div className="flex flex-col">
+      <div className="flex flex-col researchDiv">
         <img
           src="/logo.gif"
           width="300"

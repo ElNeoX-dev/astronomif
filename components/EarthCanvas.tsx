@@ -22,7 +22,7 @@ const EarthCanvas: React.FC = () => {
         fov: 45,
         near: 0.1,
         far: 200,
-        position: [-4, 3, 6],
+        position: [-1, 3, 6],
       }}
     >
       <Suspense fallback={<CanvasLoader />}>

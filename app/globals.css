@@ -71,8 +71,8 @@ body {
   margin-top: -20vh;
 }
 
-.researchDiv:focus-within > div > h1,
-.researchDiv:focus-within > div > h2 {
+.researchDiv:focus-within h1,
+.researchDiv:focus-within h2 {
   color: rgba(0, 0, 0, 0);
   transition: 300ms ease-in-out;
 }
@@ -132,8 +132,9 @@ body {
 */
 
 .btn:hover {
-  background-color: rgba(255, 255, 255, 0.256);
   color: rgb(0, 0, 0);
+
+  box-shadow: 5px 5px 50px #ffaf1a70, -5px -5px 50px #ffffff;
   /* box-shadow: 0 2px 0 2px #0d3b66; */
 }
 
@@ -144,5 +145,5 @@ body {
 }
 */
 .btn:active {
-  transform: scale(0.7);
+  transform: scale(0.9);
 }

@@ -24,13 +24,14 @@ const RootLayout: React.FC<LayoutProps> = ({ Component, pageProps }) => {
     <>
       <Head>
         <link rel="icon" href="/icon.svg" />
+        <title>Astronom'IF</title>
       </Head>
       <MouseEffect />
       <div className="min-h-screen max-h-screen overflow-hidden flex">
         <div id="background" />
         <div className="m-6 glassBackground rounded-tl-[30px] rounded-br-[30px] flex-grow overflow-hidden">
           <main
-            className={`${cabin.className} text-white flex w-full h-full flex-col items-center researchDiv`}
+            className={`${cabin.className} text-white flex w-full h-full flex-col items-center`}
           >
             <Component {...pageProps} />
           </main>

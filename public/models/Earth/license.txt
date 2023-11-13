@@ -1,11 +1,11 @@
 Model Information:
-* title:	Stylized planet
-* source:	https://sketchfab.com/3d-models/stylized-planet-789725db86f547fc9163b00f302c3e70
-* author:	cmzw (https://sketchfab.com/cmzw)
+* title:	Planet Earth
+* source:	https://sketchfab.com/3d-models/planet-earth-babd284930204736a938915ceb0a6535
+* author:	JanesBT (https://sketchfab.com/JanesBt)
 
 Model License:
 * license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 * requirements:	Author must be credited. Commercial use is allowed.
 
 If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
-This work is based on "Stylized planet" (https://sketchfab.com/3d-models/stylized-planet-789725db86f547fc9163b00f302c3e70) by cmzw (https://sketchfab.com/cmzw) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+This work is based on "Planet Earth" (https://sketchfab.com/3d-models/planet-earth-babd284930204736a938915ceb0a6535) by JanesBT (https://sketchfab.com/JanesBt) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

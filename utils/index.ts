@@ -16,7 +16,7 @@ PREFIX dbr: <http://dbpedia.org/resource/>\n\
 PREFIX dbp: <http://dbpedia.org/property/>\n\
 \n";
 
-const executeQuery = async (query: string) => {
+export const executeQuery = async (query: string) => {
   try {
     const { data } = await axios.get("http://dbpedia.org/sparql", {
       params: { query: prefixes + query, format: "json" },
@@ -28,7 +28,7 @@ const executeQuery = async (query: string) => {
   }
 };
 
-const listPlanets = async (): Promise<AxiosResponse> => {
+export const listPlanets = async (): Promise<AxiosResponse> => {
   return await executeQuery(`
         SELECT ?planet ?name ?mass ?volume ?gravity ?description 
         WHERE {
@@ -43,7 +43,9 @@ const listPlanets = async (): Promise<AxiosResponse> => {
   `);
 };
 
-const searchPlanetByName = async (name: string): Promise<AxiosResponse> => {
+export const searchPlanetByName = async (
+  name: string
+): Promise<AxiosResponse> => {
   return await executeQuery(`
         SELECT ?planet ?name ?mass ?volume ?gravity ?description 
         WHERE {
@@ -58,7 +60,23 @@ const searchPlanetByName = async (name: string): Promise<AxiosResponse> => {
     `);
 };
 
-const getInfosPlanet = async (name: string): Promise<AxiosResponse> => {
+export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
+  const resourceId: string = `:${id}`;
+  return await executeQuery(`
+        SELECT ?name ?image ?mass ?volume ?gravity ?description 
+        WHERE {
+            ${resourceId} a dbo:Planet ;
+                foaf:name ?name .
+            OPTIONAL {${resourceId} dbo:thumbnail ?image .}
+            OPTIONAL {${resourceId} dbo:mass ?mass .}
+            OPTIONAL {${resourceId} dbo:volume ?volume .}
+            OPTIONAL {${resourceId} dbo:gravity ?gravity .}
+            OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+        }
+    `);
+};
+
+export const getInfosPlanet = async (name: string): Promise<AxiosResponse> => {
   return await executeQuery(`
         SELECT ?apoapsis ?periapsis ?averageSpeed ?maxTemperature ?meanTemperature ?minTemperature ?volume
         WHERE {
@@ -74,7 +92,7 @@ const getInfosPlanet = async (name: string): Promise<AxiosResponse> => {
     `);
 };
 
-const listStars = async (): Promise<AxiosResponse> => {
+export const listStars = async (): Promise<AxiosResponse> => {
   return await executeQuery(`
         SELECT ?star ?name ?mass ?luminosity ?constellation ?description 
         WHERE {
@@ -89,7 +107,7 @@ const listStars = async (): Promise<AxiosResponse> => {
     `);
 };
 
-const listGalaxies = async (): Promise<AxiosResponse> => {
+export const listGalaxies = async (): Promise<AxiosResponse> => {
   return await executeQuery(`
         SELECT ?galaxy ?name ?type ?distance ?mass ?description 
         WHERE {
@@ -104,10 +122,68 @@ const listGalaxies = async (): Promise<AxiosResponse> => {
     `);
 };
 
-export {
-  listPlanets,
-  searchPlanetByName,
-  getInfosPlanet,
-  listStars,
-  listGalaxies,
+export const searchGalaxyByName = async (
+  name: string
+): Promise<AxiosResponse> => {
+  return await executeQuery(`
+        SELECT ?galaxy ?name ?type ?distance ?mass ?description 
+        WHERE {
+            ?galaxy a dbo:Galaxy .
+            OPTIONAL {?galaxy foaf:name ?name .}
+            OPTIONAL {?galaxy dbo:type ?type .}
+            OPTIONAL {?galaxy dbo:distance ?distance .}
+            OPTIONAL {?galaxy dbo:mass ?mass .}
+            OPTIONAL {?galaxy dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+            FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))
+        }
+        LIMIT 50
+    `);
+};
+
+export const searchGalaxyById = async (id: string): Promise<AxiosResponse> => {
+  const resourceId: string = `:${id}`;
+  return await executeQuery(`
+      SELECT ?name ?type ?distance ?mass ?description 
+        WHERE {
+          ${resourceId} a dbo:Galaxy .
+            OPTIONAL {${resourceId} foaf:name ?name .}
+            OPTIONAL {${resourceId} dbo:type ?type .}
+            OPTIONAL {${resourceId} dbo:distance ?distance .}
+            OPTIONAL {${resourceId} dbo:mass ?mass .}
+            OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+        }
+    `);
+};
+
+export const searchStarByName = async (
+  name: string
+): Promise<AxiosResponse> => {
+  return await executeQuery(`
+        SELECT ?star ?name ?type ?distance ?mass ?description 
+        WHERE {
+            ?star a dbo:Galaxy .
+            OPTIONAL {?star foaf:name ?name .}
+            OPTIONAL {?star dbo:type ?type .}
+            OPTIONAL {?star dbo:distance ?distance .}
+            OPTIONAL {?star dbo:mass ?mass .}
+            OPTIONAL {?star dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+            FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))
+        }
+        LIMIT 50
+    `);
+};
+
+export const searchStarById = async (id: string): Promise<AxiosResponse> => {
+  const resourceId: string = `:${id}`;
+  return await executeQuery(`
+      SELECT ?name ?type ?distance ?mass ?description 
+        WHERE {
+          ${resourceId} a dbo:Star .
+            OPTIONAL {${resourceId} foaf:name ?name .}
+            OPTIONAL {${resourceId} dbo:type ?type .}
+            OPTIONAL {${resourceId} dbo:distance ?distance .}
+            OPTIONAL {${resourceId} dbo:mass ?mass .}
+            OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+        }
+    `);
 };

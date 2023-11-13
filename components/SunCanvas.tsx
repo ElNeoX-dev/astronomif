@@ -8,7 +8,7 @@ const Sun = () => {
   const sun = useGLTF("/models/Sun/scene.gltf");
 
   return (
-    <primitive object={sun.scene} scale={1.0} position-y={0} rotation-y={0} />
+    <primitive object={sun.scene} scale={1} position-y={0} rotation-y={0} />
   );
 };
 
