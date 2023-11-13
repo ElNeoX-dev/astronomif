@@ -233,11 +233,10 @@
       },
       "name": "02_-_Default",
       "pbrMetallicRoughness": {
-        "baseColorFactor": [0.0, 0.0, 0.0, 0.0],
+        "baseColorFactor": [0.0, 0.0, 0.0, 1.0],
         "metallicFactor": 0.0,
         "roughnessFactor": 0.8929713596
-      },
-      "alphaMode": "BLEND"
+      }
     }
   ],
   "meshes": [

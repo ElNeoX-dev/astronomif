@@ -95,7 +95,7 @@ body {
 
 .title {
   text-align: center;
-  margin-top: 10vh;
+  /* margin-top: 10vh; */
   opacity: 0.6;
   @apply text-8xl unselectable;
 }
@@ -113,11 +113,12 @@ body {
   overflow: hidden;
   transition: all 0.3s;
   border-radius: 12px;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgb(0, 0, 0, 0);
   font-weight: bolder;
   /* box-shadow: 0 2px 0 2px #000; */
 }
 
+/*
 .btn:before {
   content: "";
   position: absolute;
@@ -128,6 +129,7 @@ body {
   transform: skewX(30deg) translate(-150%, -50%);
   transition: all 0.3s;
 }
+*/
 
 .btn:hover {
   background-color: rgba(255, 255, 255, 0.256);
@@ -135,11 +137,12 @@ body {
   /* box-shadow: 0 2px 0 2px #0d3b66; */
 }
 
+/*
 .btn:hover::before {
   transform: skewX(30deg) translate(150%, -50%);
   transition-delay: 0.05s;
 }
-
+*/
 .btn:active {
-  transform: scale(0.9);
+  transform: scale(0.7);
 }

@@ -10,27 +10,6 @@ import {
 import Head from "next/head";
 
 export default function Home() {
-  const [title, setTitle] = useState("Astronom'IF");
-
-  useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth < 768) {
-        setTitle("Astronom'IF - Mobile");
-      } else {
-        setTitle("Astronom'IF");
-      }
-    }
-
-    window.addEventListener("resize", handleResize);
-
-    // Set initial title
-    handleResize();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -50,9 +29,16 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>Astronom'IF</title>
       </Head>
       <div className="flex flex-col">
+        <img
+          src="/logo.gif"
+          width="300"
+          alt="Astronom'IF Logo"
+          className="logo-class"
+          style={{ maxWidth: "100px", margin: "0 auto", opacity: "0.55" }}
+        />
         <h1 className="title mb-15">Astronom'IF</h1>
         <h2 className="font-thin opacity-50 text-center unselectable">
           The first dedicated astronomy search engine
