@@ -67,10 +67,10 @@ export const searchPlanetByName = async (
 export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
   const resourceId: string = `:${id}`;
   return await executeQuery(`
-        SELECT ?name ?image ?mass ?volume ?gravity ?radius ?minTemperature ?meanTemperature ?maxTemperature ?discovered ?satelliteOf ?surfaceArea ?wikipedia ?wikiPageID ?description 
+        SELECT ?name ?image ?mass ?volume ?gravity ?radius ?minTemperature ?meanTemperature ?maxTemperature ?discovered ?discovered ?satelliteOf ?surfaceArea ?orbitalPeriod ?wikipedia ?wikiPageID ?description 
         WHERE {
-            ${resourceId} a dbo:Planet ;
-                foaf:name ?name .
+            ${resourceId} a dbo:Planet.
+            OPTIONAL {${resourceId} foaf:name ?name}.
             OPTIONAL {${resourceId} dbo:thumbnail ?image .}
             OPTIONAL {${resourceId} dbo:mass ?mass .}
             OPTIONAL {${resourceId} dbo:volume ?volume .}
@@ -80,8 +80,10 @@ export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
             OPTIONAL {${resourceId} dbo:minimumTemperature ?minTemperature .}
             OPTIONAL {${resourceId} dbo:maximumTemperature ?maxTemperature .}
             OPTIONAL {${resourceId} dbo:discovered ?discovered .}
+            OPTIONAL {${resourceId} dbo:discoverer ?discoverer .}
             OPTIONAL {${resourceId} dbo:satelliteOf ?satelliteOf .}
             OPTIONAL {${resourceId} dbo:surfaceArea ?surfaceArea .}
+            OPTIONAL {${resourceId} dbo:orbitalPeriod ?orbitalPeriod .}
             OPTIONAL {${resourceId} dbo:isPrimaryTopicOf ?wikipedia .}
             OPTIONAL {${resourceId} dbo:wikiPageID ?wikiPageID .}
             OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}

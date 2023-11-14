@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
-import { CustomCanvas } from "@/components";
+// import { CustomCanvas } from "@/components";
 
 import { searchPlanetById, getWikipediaImage, renderSection } from "@/utils";
 import Link from "next/link";
@@ -23,6 +23,7 @@ interface Planet {
   minTemperature?: string;
   maxTemperature?: string;
   discovered?: string;
+  discoverer?: string;
   satelliteOf?: string;
   surfaceArea?: string;
   wikipedia: string;
@@ -47,7 +48,22 @@ const Planet: React.FC<PlanetProps> = () => {
           for (const key in planet) {
             planet[key] = planet[key]?.value;
           }
-          setPlanet(planet);
+
+          getWikipediaImage(id as string)
+            .then((imageURL) => {
+              if (planet) {
+                planet.imageWikipedia = imageURL!;
+              }
+              setPlanet(planet);
+              console.log(imageURL);
+            })
+            .catch((error) => {
+              console.log(error);
+              alert("Image not found");
+            });
+            setLoading(false);
+        } else {
+          alert("Planet not found");
         }
 
         // setLoading(false);
@@ -57,19 +73,7 @@ const Planet: React.FC<PlanetProps> = () => {
         alert("Planet not found");
       });
 
-      getWikipediaImage(id as string)
-      .then((imageURL) => {
-        if (planet) {
-          planet.imageWikipedia = imageURL!;
-          setPlanet(planet);
-        }
-        console.log(imageURL);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Image not found");
-      });
+      
         
       
   }, [id]);
@@ -96,13 +100,11 @@ const Planet: React.FC<PlanetProps> = () => {
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
-            <div className="col-span-1 flex flex-col items-center">
-              <CustomCanvas 
-                modelPath={planet ? "/models/" + planet.name + "/scene.gltf" : "/models/unknown/scene.gltf"} />
-              <span></span>
-            </div>
             <div className="col-span-1 flex flex-col items-left">
-            <Image className="mb-2"
+
+              {/* <CustomCanvas 
+                modelPath={planet ? "/models/" + planet.name + "/scene.gltf" : "/models/unknown/scene.gltf"} /> */}
+            <Image className="mb-2 rounded-xl"
                 src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
                 alt={planet?.name || "Loading"}
                 width={300}
@@ -110,10 +112,11 @@ const Planet: React.FC<PlanetProps> = () => {
               />
                 
               <span className="flex-grow mr-2">
-                {planet?.mass && renderSubSection("Mass", planet.mass)}
+                {planet?.mass && renderSubSection("Mass", planet.mass + "kg")}
                 {planet?.volume && renderSubSection("Volume", planet.volume)}
                 {planet?.radius && renderSubSection("Radius", planet.radius)}
                 {planet?.discovered && renderSubSection("Date of discover", planet.discovered)}
+                {planet?.discoverer && renderSubSection("Discoverer", planet.discoverer)}
                 {(planet?.meanTemperature && planet?.minTemperature && planet?.maxTemperature ) && renderSubSection("Temperature", "Minimum : " + planet.minTemperature +"\nMaxmimum : " + planet.maxTemperature + "\nMean : " + planet.meanTemperature )}
                 {planet?.satelliteOf && renderSubSection("Satellite of", planet.satelliteOf)}
                 {planet?.surfaceArea && renderSubSection("Surface", planet.surfaceArea)}
