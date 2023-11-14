@@ -122,14 +122,18 @@ body {
   @apply font-bold opacity-60 unselectable text-4xl;
 }
 
+.subSectionTitle {
+  @apply font-bold opacity-60 unselectable text-2xl mt-2;
+}
+
 .sectionDescription {
-  @apply opacity-60 text-justify;
+  @apply text-justify;
 }
 
 hr.rounded {
   border-top: 2px solid #bbbbbb2e;
   border-radius: 40px;
-  @apply my-1;
+  @apply my-1 ;
 }
 
 /*

@@ -4,17 +4,30 @@ import Head from "next/head";
 import Image from "next/image";
 import { CustomCanvas, SaturnCanvas } from "@/components";
 
-import { searchPlanetById, renderSection } from "@/utils";
+import { searchPlanetById, getWikipediaImage, renderSection } from "@/utils";
 import Link from "next/link";
+import { renderSubSection } from "@/utils/utils";
 
 interface PlanetProps {}
 
 interface Planet {
-  name?: string;
+  name: string;
   description?: string;
   image?: string;
-  distance?: string;
+  imageWikipedia?: string;
+  volume?: string;
   mass?: string;
+  gravity?: string;
+  radius?: string;
+  meanTemperature?: string;
+  minTemperature?: string;
+  maxTemperature?: string;
+  discovered?: string;
+  discoverer?: string;
+  satelliteOf?: string;
+  surfaceArea?: string;
+  wikipedia: string;
+  wikiPageID: string;
 }
 
 const Planet: React.FC<PlanetProps> = () => {
@@ -35,15 +48,35 @@ const Planet: React.FC<PlanetProps> = () => {
           for (const key in planet) {
             planet[key] = planet[key]?.value;
           }
-          setPlanet(planet);
-          checkModelPath(id); // Check for model path when a planet is found
+
+          getWikipediaImage(id as string)
+            .then((imageURL) => {
+              if (planet) {
+                planet.imageWikipedia = imageURL!;
+              }
+              setPlanet(planet);
+              checkModelPath(id); // Check for model path when a planet is found
+              console.log(imageURL);
+            })
+            .catch((error) => {
+              console.log(error);
+              alert("Image not found");
+            });
+            setLoading(false);
+        } else {
+          alert("Planet not found");
         }
-        setLoading(false);
+
+        // setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         alert("Planet not found");
       });
+
+      
+        
+      
   }, [id]);
 
   // Function to simulate checking if the model path exists
@@ -92,21 +125,28 @@ const Planet: React.FC<PlanetProps> = () => {
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
-            <div className="col-span-1 flex flex-col items-center">
-              {planet?.name === "Saturn" ? (
-                <SaturnCanvas/>
-              ) : (
-                <CustomCanvas modelPath={modelPath} />
-              )}
-              <span></span>
-            </div>
-            <div className="col-span-1 flex flex-col items-center">
-              <Image
-                src={planet?.image ? planet.image : "/logo.gif"}
-                alt={planet?.name ? planet.name : "Loading"}
+            <div className="col-span-1 flex flex-col items-left">
+
+              <CustomCanvas 
+                modelPath={planet ? "/models/" + planet.name + "/scene.gltf" : "/models/unknown/scene.gltf"} />
+            <Image className="mb-2 rounded-xl"
+                src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
+                alt={planet?.name || "Loading"}
                 width={300}
                 height={300}
               />
+            </div>
+                
+              <span className="flex-grow mr-2">
+                {planet?.mass && renderSubSection("Mass", planet.mass + "kg")}
+                {planet?.volume && renderSubSection("Volume", planet.volume)}
+                {planet?.radius && renderSubSection("Radius", planet.radius)}
+                {planet?.discovered && renderSubSection("Date of discover", planet.discovered)}
+                {planet?.discoverer && renderSubSection("Discoverer", planet.discoverer)}
+                {(planet?.meanTemperature && planet?.minTemperature && planet?.maxTemperature ) && renderSubSection("Temperature", "Minimum : " + planet.minTemperature +"\nMaxmimum : " + planet.maxTemperature + "\nMean : " + planet.meanTemperature )}
+                {planet?.satelliteOf && renderSubSection("Satellite of", planet.satelliteOf)}
+                {planet?.surfaceArea && renderSubSection("Surface", planet.surfaceArea)}
+              </span>
             </div>
             <div className="col-span-3">
               {planet?.description &&
