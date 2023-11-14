@@ -29,7 +29,7 @@ const Ring = () => {
     }
   });
 
-  return <primitive ref={ref} object={stars.scene} scale={15.0} position-y={0} />;
+  return <primitive ref={ref} object={stars.scene} scale={20.0} position-y={0} />;
 };
 
 const SaturnCanvas: React.FC = () => {

@@ -62,7 +62,7 @@ const Planet: React.FC<PlanetProps> = () => {
               console.log(error);
               alert("Image not found");
             });
-            setLoading(false);
+          setLoading(false);
         } else {
           alert("Planet not found");
         }
@@ -73,10 +73,6 @@ const Planet: React.FC<PlanetProps> = () => {
         console.log(error);
         alert("Planet not found");
       });
-
-      
-        
-      
   }, [id]);
 
   // Function to simulate checking if the model path exists
@@ -93,7 +89,7 @@ const Planet: React.FC<PlanetProps> = () => {
       "Neptune",
       "Moon",
       "Haumea",
-      "Makemake"
+      "Makemake",
     ]; // Example list of known planets
     const pathExists = knownPlanets.includes(planetName);
     setModelPath(
@@ -126,10 +122,13 @@ const Planet: React.FC<PlanetProps> = () => {
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
             <div className="col-span-1 flex flex-col items-left">
-
-              <CustomCanvas 
-                modelPath={planet ? "/models/" + planet.name + "/scene.gltf" : "/models/unknown/scene.gltf"} />
-            <Image className="mb-2 rounded-xl"
+              {planet?.name === "Saturn" ? (
+                <SaturnCanvas />
+              ) : (
+                <CustomCanvas modelPath={modelPath} />
+              )}
+              <Image
+                className="mb-2 rounded-xl"
                 src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
                 alt={planet?.name || "Loading"}
                 width={300}
@@ -139,11 +138,26 @@ const Planet: React.FC<PlanetProps> = () => {
                 {planet?.mass && renderSubSection("Mass", planet.mass + "kg")}
                 {planet?.volume && renderSubSection("Volume", planet.volume)}
                 {planet?.radius && renderSubSection("Radius", planet.radius)}
-                {planet?.discovered && renderSubSection("Date of discover", planet.discovered)}
-                {planet?.discoverer && renderSubSection("Discoverer", planet.discoverer)}
-                {(planet?.meanTemperature && planet?.minTemperature && planet?.maxTemperature ) && renderSubSection("Temperature", "Minimum : " + planet.minTemperature +"\nMaxmimum : " + planet.maxTemperature + "\nMean : " + planet.meanTemperature )}
-                {planet?.satelliteOf && renderSubSection("Satellite of", planet.satelliteOf)}
-                {planet?.surfaceArea && renderSubSection("Surface", planet.surfaceArea)}
+                {planet?.discovered &&
+                  renderSubSection("Date of discover", planet.discovered)}
+                {planet?.discoverer &&
+                  renderSubSection("Discoverer", planet.discoverer)}
+                {planet?.meanTemperature &&
+                  planet?.minTemperature &&
+                  planet?.maxTemperature &&
+                  renderSubSection(
+                    "Temperature",
+                    "Minimum : " +
+                      planet.minTemperature +
+                      "\nMaxmimum : " +
+                      planet.maxTemperature +
+                      "\nMean : " +
+                      planet.meanTemperature
+                  )}
+                {planet?.satelliteOf &&
+                  renderSubSection("Satellite of", planet.satelliteOf)}
+                {planet?.surfaceArea &&
+                  renderSubSection("Surface", planet.surfaceArea)}
               </span>
             </div>
             <div className="col-span-3">
