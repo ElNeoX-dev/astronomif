@@ -135,8 +135,6 @@ const Planet: React.FC<PlanetProps> = () => {
                 width={300}
                 height={300}
               />
-            </div>
-                
               <span className="flex-grow mr-2">
                 {planet?.mass && renderSubSection("Mass", planet.mass + "kg")}
                 {planet?.volume && renderSubSection("Volume", planet.volume)}
