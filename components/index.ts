@@ -9,6 +9,7 @@ import EarthCanvas from "./EarthCanvas";
 import GalaxyCanvas from "./GalaxyCanvas";
 import SunCanvas from "./SunCanvas";
 import CustomCanvas from "./CustomCanvas";
+import SaturnCanvas from "./SaturnCanvas";
 
 export {
   Loading,
@@ -21,5 +22,6 @@ export {
   EarthCanvas,
   GalaxyCanvas,
   SunCanvas,
-  CustomCanvas
+  CustomCanvas,
+  SaturnCanvas
 };
