@@ -1,6 +1,6 @@
 interface CustomInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFocused: React.Dispatch<React.SetStateAction<Boolean>>;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({

@@ -32,6 +32,18 @@ export const executeQuery = async (query: string) => {
   }
 };
 
+export const executeWikiQuery = async (query: string) => {
+  try {
+    const { data } = await axios.get("http://dbpedia.org/sparql", {
+      params: { query: prefixes + query, format: "json" },
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const listPlanets = async (): Promise<AxiosResponse> => {
   return await executeQuery(`
         SELECT ?planet ?name ?mass ?volume ?gravity ?description 
@@ -191,24 +203,64 @@ export const searchStarByName = async (
 export const searchStarById = async (id: string): Promise<AxiosResponse> => {
   const resourceId: string = `:${id}`;
   return await executeQuery(`
-      SELECT ?name ?type ?distance ?mass ?description 
-        WHERE {
-          ${resourceId} a dbo:Star .
-            OPTIONAL {${resourceId} foaf:name ?name .}
-            OPTIONAL {${resourceId} dbo:type ?type .}
-            OPTIONAL {${resourceId} dbo:distance ?distance .}
-            OPTIONAL {${resourceId} dbo:mass ?mass .}
-            OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-        }
+  SELECT ?name ?type ?distance ?mass ?description ?wikiTitle
+  WHERE {
+    :Aldebaran a dbo:Star .
+    OPTIONAL {:Aldebaran foaf:name ?name .}
+    OPTIONAL {:Aldebaran dbo:type ?type .}
+    OPTIONAL {:Aldebaran dbo:distance ?distance .}
+    OPTIONAL {:Aldebaran dbo:mass ?mass .}
+    OPTIONAL {
+      :Aldebaran foaf:isPrimaryTopicOf ?wikipedia .
+      BIND(REPLACE(STR(?wikipedia), "^http://en.wikipedia.org/wiki/", "") AS ?wikiTitle)
+    }
+    OPTIONAL {
+      :Aldebaran dbo:abstract ?description 
+      FILTER(LANG(?description) = 'en') .
+    }
+  }
+    `);
+};
+
+export const searchStarWikidata = async (
+  id: string
+): Promise<AxiosResponse> => {
+  const resourceId: string = `:${id}`;
+  return await executeQuery(`
+  SELECT ?name ?type ?distance ?mass ?description ?wikiTitle
+  WHERE {
+    :Aldebaran a dbo:Star .
+    OPTIONAL {:Aldebaran foaf:name ?name .}
+    OPTIONAL {:Aldebaran dbo:type ?type .}
+    OPTIONAL {:Aldebaran dbo:distance ?distance .}
+    OPTIONAL {:Aldebaran dbo:mass ?mass .}
+    OPTIONAL {
+      :Aldebaran foaf:isPrimaryTopicOf ?wikipedia .
+      BIND(REPLACE(STR(?wikipedia), "^http://en.wikipedia.org/wiki/", "") AS ?wikiTitle)
+    }
+    OPTIONAL {
+      :Aldebaran dbo:abstract ?description 
+      FILTER(LANG(?description) = 'en') .
+    }
+  }
     `);
 };
 
 export const getWikipediaImage = async (id: string) => {
   try {
-    const { data } = await axios.get("https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php", {
-      params: { action: "query", titles: id, prop:"pageimages", pithumbsize: 300, format: "json" },
-    });
-    
+    const { data } = await axios.get(
+      "https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php",
+      {
+        params: {
+          action: "query",
+          titles: id,
+          prop: "pageimages",
+          pithumbsize: 300,
+          format: "json",
+        },
+      }
+    );
+
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
 

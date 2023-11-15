@@ -6,9 +6,9 @@ import { ListItem, Loading } from ".";
 import { listGalaxies } from "@/utils";
 
 interface SearchBoxProps {
-  searchTerm: string;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  searchTerm: String;
+  isLoading: Boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<Boolean>>;
 }
 
 interface Item {

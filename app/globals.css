@@ -19,6 +19,10 @@
   /* Standard */
 }
 
+.unselectable:focus {
+  cursor: default;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -133,7 +137,7 @@ body {
 hr.rounded {
   border-top: 2px solid #bbbbbb2e;
   border-radius: 40px;
-  @apply my-1 ;
+  @apply my-1;
 }
 
 /*
@@ -162,6 +166,12 @@ hr.rounded {
   transition-delay: 0.05s;
 }
 */
+
 .btn:active {
   transform: scale(0.9);
+}
+
+.fade-out {
+  margin-top: 100vh;
+  transition: 300ms ease-in-out;
 }
