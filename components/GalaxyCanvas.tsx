@@ -5,7 +5,7 @@ import CanvasLoader from "./Loader";
 import * as THREE from "three";
 
 const Galaxy = () => {
-  const galaxy = useGLTF("/models/Galaxy/scene.gltf");
+  const galaxy = useGLTF("/models/Milky_Way/scene.gltf");
   const ref = useRef<THREE.Group>(null);
 
   useFrame(() => {

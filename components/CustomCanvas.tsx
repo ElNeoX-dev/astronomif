@@ -6,9 +6,10 @@ import * as THREE from "three";
 
 type CustomModelProps = {
   modelPath: string;
+  type?: string; // Optional type prop
 };
 
-const CustomModel: React.FC<CustomModelProps> = ({ modelPath }) => {
+const CustomModel: React.FC<CustomModelProps> = ({ modelPath, type }) => {
   const model = useGLTF(modelPath);
   const ref = useRef<THREE.Group>(null);
 
@@ -18,12 +19,24 @@ const CustomModel: React.FC<CustomModelProps> = ({ modelPath }) => {
     }
   });
 
+  // Adjust scale and position based on type
+  const scale = type === "galaxy" ? 2.0 : 1.0;
+  const rotation = type === "galaxy" ? Math.PI / 6 : 0;
+
   return (
-    <primitive ref={ref} object={model.scene} scale={1.0} position-y={0} />
+    <primitive
+      ref={ref}
+      object={model.scene}
+      scale={scale}
+      rotation-x={rotation}
+    />
   );
 };
 
-const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath }) => {
+const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath, type }) => {
+  // Adjust camera position based on type
+  const cameraPosition = type === "galaxy" ? [-4, 3, 6] : [-80, 3, 6];
+
   return (
     <Canvas
       shadows
@@ -33,12 +46,12 @@ const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath }) => {
         fov: 45,
         near: 0.1,
         far: 200,
-        position: [-80, 3, 6],
+        position: cameraPosition,
       }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls enableZoom={false} />
-        <CustomModel modelPath={modelPath} />
+        <CustomModel modelPath={modelPath} type={type} />
 
         <Preload all />
       </Suspense>
