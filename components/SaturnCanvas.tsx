@@ -29,12 +29,17 @@ const Ring = () => {
     }
   });
 
-  return <primitive ref={ref} object={stars.scene} scale={20.0} position-y={0} />;
+  return (
+    <primitive ref={ref} object={stars.scene} scale={20.0} position-y={0} />
+  );
 };
 
 const SaturnCanvas: React.FC = () => {
   return (
     <Canvas
+      className="mb-2 rounded-xl"
+      width={300}
+      height={300}
       shadows
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
@@ -46,7 +51,7 @@ const SaturnCanvas: React.FC = () => {
       }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
+        <OrbitControls enableZoom={false} enablePan={false} />
         <Saturn />
         <Ring />
 

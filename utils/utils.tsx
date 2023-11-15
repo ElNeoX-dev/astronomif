@@ -6,10 +6,15 @@ export const renderSection = (title: string, content: string) => (
   </>
 );
 
-export const renderSubSection = (title: string, content: string) => (
+export const renderSubSection = (title: string, ...points: string[]) => (
   <>
     <h1 className="subSectionTitle">{title}</h1>
     <hr className="rounded" />
-    <span className="sectionDescription">{content}</span>
+    <ul className="list-disc">
+      {/* TODO : add bullet points  */}
+      {points.map((point) => (
+        <li key={point}>{point}</li>
+      ))}
+    </ul>
   </>
 );

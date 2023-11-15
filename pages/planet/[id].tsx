@@ -43,7 +43,6 @@ const Planet: React.FC<PlanetProps> = () => {
     searchPlanetById(id)
       .then((response) => {
         const planet = (response as any)?.results?.bindings[0];
-        console.log(planet);
         if (planet) {
           for (const key in planet) {
             planet[key] = planet[key]?.value;
@@ -102,37 +101,43 @@ const Planet: React.FC<PlanetProps> = () => {
   return (
     <>
       <Head>
-        <title>{(id || "Loading") as ReactNode}</title>
+        <title>{(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}</title>
       </Head>
       <div className="flex flex-col gap-2 py-2 px-4 overflow-y-scroll">
         <div className="flex flex-row justify-start">
           <Link href="/">
             <Image
-              className=""
+              className="unselectable"
               src="/logo.gif"
               alt="Astronom'IF"
               width={100}
               height={100}
+              priority
             />
           </Link>
           <h1 className="title mb-15">
-            {(planet ? id : "Loading") as ReactNode}
+            {(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}
           </h1>
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
             <div className="col-span-1 flex flex-col items-left">
               {planet?.name === "Saturn" ? (
-                <SaturnCanvas />
+                <div className="object-3d">
+                  <SaturnCanvas />
+                </div>
               ) : (
-                <CustomCanvas modelPath={modelPath} />
+                <div className="object-3d">
+                  <CustomCanvas modelPath={modelPath} />
+                </div>
               )}
               <Image
-                className="mb-2 rounded-xl"
+                className="mb-2 rounded-xl unselectable"
                 src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
                 alt={id || "Loading"}
                 width={300}
                 height={300}
+                priority
               />
               <span className="flex-grow mr-2">
                 {planet?.mass && renderSubSection("Mass", planet.mass + "kg")}
@@ -147,12 +152,9 @@ const Planet: React.FC<PlanetProps> = () => {
                   planet?.maxTemperature &&
                   renderSubSection(
                     "Temperature",
-                    "Minimum : " +
-                      planet.minTemperature +
-                      "\nMaxmimum : " +
-                      planet.maxTemperature +
-                      "\nMean : " +
-                      planet.meanTemperature
+                    "Minimum : " + planet.minTemperature + "K",
+                    "Maximum : " + planet.maxTemperature + "K",
+                    "Mean : " + planet.meanTemperature + "K"
                   )}
                 {planet?.satelliteOf &&
                   renderSubSection("Satellite of", planet.satelliteOf)}

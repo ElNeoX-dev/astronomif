@@ -23,5 +23,5 @@ export {
   GalaxyCanvas,
   SunCanvas,
   CustomCanvas,
-  SaturnCanvas
+  SaturnCanvas,
 };

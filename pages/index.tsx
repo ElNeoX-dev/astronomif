@@ -14,6 +14,10 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState<String>("");
   const [isFocused, setIsFocused] = useState<Boolean>(false);
 
+  const [isHoverPlanet, setIsHoverPlanet] = useState<Boolean>(false);
+  const [isHoverGalaxy, setIsHoverGalaxy] = useState<Boolean>(false);
+  const [isHoverStar, setIsHoverStar] = useState<Boolean>(false);
+
   const [planetFilter, setPlanetFilter] = useState<Boolean>(false);
   const [galaxyFilter, setGalaxyFilter] = useState<Boolean>(false);
   const [starFilter, setStarFilter] = useState<Boolean>(false);
@@ -29,6 +33,10 @@ export default function Home() {
       setSearchTerm(e.target.value);
     }, 1000);
   };
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [isFocused]);
 
   return (
     <>
@@ -59,29 +67,46 @@ export default function Home() {
           />
         )}
       </div>
-      {!isFocused && (
+      {
         <div
           className={`flex flex-row self-center ${
-            !isFocused ? "fade-out" : ""
-          }`}
-        >
-          <div className="galaxy">
-            <CustomButton onClick={async () => {}} state={galaxyFilter}>
-              <GalaxyCanvas />
-            </CustomButton>
-          </div>
-          <div className="galaxy">
-            <CustomButton onClick={async () => {}} state={planetFilter}>
-              <EarthCanvas />
-            </CustomButton>
-          </div>
-          <div className="galaxy">
-            <CustomButton onClick={async () => {}} state={starFilter}>
-              <SunCanvas />
-            </CustomButton>
-          </div>
+            isFocused ? "filter-out" : ""
+          } ${!isFocused ? "filter-in" : ""}`}
+        ></div>
+      }
+      <div className="flex flex-row self-center">
+        <div className="button-3d">
+          <CustomButton setState={setGalaxyFilter} state={galaxyFilter}>
+            <GalaxyCanvas
+              setHoverState={setIsHoverGalaxy}
+              hoverState={isHoverGalaxy}
+              setActiveState={setGalaxyFilter}
+              activeState={galaxyFilter}
+            />
+          </CustomButton>
         </div>
-      )}
+        <div className="button-3d">
+          <CustomButton setState={setPlanetFilter} state={planetFilter}>
+            <EarthCanvas
+              setHoverState={setIsHoverPlanet}
+              hoverState={isHoverPlanet}
+              setActiveState={setPlanetFilter}
+              activeState={planetFilter}
+            />
+            planetFilter
+          </CustomButton>
+        </div>
+        <div className="button-3d">
+          <CustomButton setState={setStarFilter} state={starFilter}>
+            <SunCanvas
+              setHoverState={setIsHoverStar}
+              hoverState={isHoverStar}
+              setActiveState={setStarFilter}
+              activeState={starFilter}
+            />
+          </CustomButton>
+        </div>
+      </div>
     </>
   );
 }

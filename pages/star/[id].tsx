@@ -4,7 +4,13 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { CustomCanvas, SaturnCanvas } from "@/components";
 
-import { searchStarById, getWikipediaImage, renderSection } from "@/utils";
+import {
+  searchStarById,
+  getWikipediaImage,
+  renderSection,
+  searchStarWikidata,
+} from "@/utils";
+
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -27,37 +33,35 @@ const Star: React.FC<StarProps> = () => {
   const [loading, setLoading] = useState(true);
   const [star, setStar] = useState<Star>();
   const [modelPath, setModelPath] = useState("/models/unknown/scene.gltf"); // New state variable for model path
+  const [starWiki, setStarWiki] = useState<StarWiki>();
 
   useEffect(() => {
     if (!id) return;
     searchStarById(id as string)
-      .then((response) => {
+      .then(async (response) => {
         const star = (response as any)?.results?.bindings[0];
         console.log(response);
         if (star) {
           for (const key in star) {
             star[key] = star[key]?.value;
           }
-
-          getWikipediaImage(id as string)
-            .then((imageURL) => {
-              if (star) {
-                star.imageWikipedia = imageURL!;
-              }
-              setStar(star);
-              checkModelPath(id); // Check for model path when a star is found
-              console.log(imageURL);
-            })
-            .catch((error) => {
-              console.log(error);
-              alert("Image not found");
-            });
-          setLoading(false);
-        } else {
-          alert("Star not found");
+          setStar(star);
+          // recherche
+          const responseWiki = await searchStarWikidata(star.wikiTitle);
+          console.log(responseWiki);
         }
-
-        // setLoading(false);
+        getWikipediaImage(id as string).then((imageURL) => {
+          if (star) {
+            star.imageWikipedia = imageURL!;
+          }
+          setStar(star);
+          checkModelPath(id); // Check for model path when a star is found
+          console.log(imageURL);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Image not found");
       })
       .catch((error) => {
         console.log(error);
@@ -68,9 +72,7 @@ const Star: React.FC<StarProps> = () => {
   // Function to simulate checking if the model path exists
   const checkModelPath = (starName) => {
     // Replace this logic with your actual check
-    const knownStars = [
-      "Sun"
-    ]; // Example list of known stars
+    const knownStars = ["Sun"]; // Example list of known stars
     const pathExists = knownStars.includes(starName);
     setModelPath(
       pathExists
@@ -82,7 +84,7 @@ const Star: React.FC<StarProps> = () => {
   return (
     <>
       <Head>
-        <title>{(star ? id : "Loading") as ReactNode}</title>
+        <title>{(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}</title>
       </Head>
       <div className="flex flex-col flex-grow overflow-x-hidden overflow-y-auto">
         <div className="flex flex-row justify-start">
@@ -98,15 +100,13 @@ const Star: React.FC<StarProps> = () => {
           <h1 className="title mb-15">
             {(star ? id : "Loading") as ReactNode}
           </h1>
-          </div>
+        </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
             <div className="col-span-1 flex flex-col items-left">
-              {star?.name === "Saturn" ? (
-                <SaturnCanvas />
-              ) : (
+              <div className="object-3d">
                 <CustomCanvas modelPath={modelPath} />
-              )}
+              </div>
               <Image
                 className="mb-2 rounded-xl"
                 src={star?.imageWikipedia || star?.image || "/logo.gif"}
@@ -144,10 +144,10 @@ const Star: React.FC<StarProps> = () => {
               {star?.description &&
                 renderSection("Description", star.description)}
             </div>
+          </div>
         </div>
-        </div>
-        </div>
-      </>
+      </div>
+    </>
   );
 };
 

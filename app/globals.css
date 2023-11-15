@@ -48,12 +48,20 @@ body {
   height: 100vh;
 }
 
-.galaxy {
+.button-3d {
   width: min(30vh, 20vw);
   height: min(30vh, 20vw);
   margin-left: 5vw;
   margin-right: 5vw;
 }
+
+.object-3d {
+  width: 20vw;
+  height: 20vw;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .input {
   border: none;
   outline: none;
@@ -61,24 +69,33 @@ body {
   padding: 1em;
   background-color: #ccc;
   box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
-  transition: 300ms ease-in-out;
   width: 300px;
   margin: 20px;
+  transition: 0.7s ease-in-out;
 }
 
 .researchDiv {
   margin-top: 15vh;
-  transition: 300ms ease-in-out;
+  transition: 0.7s ease-in-out;
 }
 
 .researchDiv:focus-within {
   margin-top: -20vh;
+  transition: 0.7s ease-in-out;
 }
 
 .researchDiv:focus-within h1,
+.researchDiv:focus-within img,
 .researchDiv:focus-within h2 {
-  color: rgba(0, 0, 0, 0);
-  transition: 300ms ease-in-out;
+  opacity: 0%;
+  transition: 0.7s ease-in-out;
+}
+
+.researchDiv h1,
+.researchDiv img,
+.researchDiv h2 {
+  opacity: 80%;
+  transition: 0.7s ease-in-out;
 }
 
 .input:focus {
@@ -88,6 +105,7 @@ body {
   box-shadow: 13px 13px 100px #ffae1a, -13px -13px 100px #ffffff;
   width: 70vw;
   margin-top: 20px;
+  transition: 0.7s ease-in-out;
 }
 
 .glassBackground {
@@ -140,38 +158,46 @@ hr.rounded {
   @apply my-1;
 }
 
-/*
-.btn:before {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 120%;
-  background-color: #ffd700;
-  top: 50%;
-  transform: skewX(30deg) translate(-150%, -50%);
-  transition: all 0.3s;
-}
-*/
-
 .btn:hover {
-  color: rgb(0, 0, 0);
-
-  box-shadow: 5px 5px 50px #ffaf1a70, -5px -5px 50px #ffffff;
-  /* box-shadow: 0 2px 0 2px #0d3b66; */
+  box-shadow: 5px 5px 150px #00419b, -5px -5px 150px #ffffff;
 }
 
-/*
-.btn:hover::before {
-  transform: skewX(30deg) translate(150%, -50%);
-  transition-delay: 0.05s;
-}
-*/
-
-.btn:active {
+.active {
   transform: scale(0.9);
+  border-color: #00419b;
+  box-shadow: 5px 5px 80px #00419b, -5px -5px 80px #ffffff;
 }
 
-.fade-out {
+.filter-out {
   margin-top: 100vh;
-  transition: 300ms ease-in-out;
+  animation-duration: 0.7s;
+  animation-name: filterOut;
+  animation-timing-function: ease-in-out;
+}
+
+.filter-in {
+  margin-top: 40px;
+  animation-duration: 0.7s;
+  animation-name: filterIn;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes filterIn {
+  from {
+    margin-top: 100vh;
+  }
+
+  to {
+    margin-top: 40px;
+  }
+}
+
+@keyframes filterOut {
+  from {
+    margin-top: 40px;
+  }
+
+  to {
+    margin-top: 100vh;
+  }
 }

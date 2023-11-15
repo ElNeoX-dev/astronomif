@@ -39,6 +39,9 @@ const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath, type }) => {
 
   return (
     <Canvas
+      className="mb-2 rounded-xl"
+      width={300}
+      height={300}
       shadows
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
@@ -51,7 +54,7 @@ const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath, type }) => {
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls enableZoom={false} />
-        <CustomModel modelPath={modelPath} type={type} />
+        <CustomModel modelPath={modelPath} type={type} enablePan={false} />
 
         <Preload all />
       </Suspense>

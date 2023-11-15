@@ -20,7 +20,14 @@ PREFIX dbr: <http://dbpedia.org/resource/>\n\
 PREFIX dbp: <http://dbpedia.org/property/>\n\
 \n";
 
-export const executeQuery = async (query: string) => {
+const prefixesWiki =
+  "PREFIX wd: <http://www.wikidata.org/entity/>\n\
+  PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n\
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\
+  PREFIX bd: <http://www.bigdata.com/rdf#>\n\
+  PREFIX service: <http://wikiba.se/ontology#label>";
+
+export const executeQuery = async (query: String): Promise<any> => {
   try {
     const { data } = await axios.get("http://dbpedia.org/sparql", {
       params: { query: prefixes + query, format: "json" },
@@ -32,10 +39,10 @@ export const executeQuery = async (query: string) => {
   }
 };
 
-export const executeWikiQuery = async (query: string) => {
+export const executeWikiQuery = async (query: String) => {
   try {
-    const { data } = await axios.get("http://dbpedia.org/sparql", {
-      params: { query: prefixes + query, format: "json" },
+    const { data } = await axios.get("https://query.wikidata.org/sparql", {
+      params: { query: prefixesWiki + query, format: "json" },
     });
     return data;
   } catch (error) {
@@ -60,24 +67,27 @@ export const listPlanets = async (): Promise<AxiosResponse> => {
 };
 
 export const searchPlanetByName = async (
-  name: string
+  name: String
 ): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?planet ?name ?mass ?volume ?gravity ?description 
+  const response = await executeQuery(`
+        SELECT ?planet ?name ?description 
         WHERE {
             ?planet a dbo:Planet .
             OPTIONAL {?planet foaf:name ?name .}
-            OPTIONAL {?planet dbo:mass ?mass .}
-            OPTIONAL {?planet dbo:volume ?volume .}
-            OPTIONAL {?planet dbo:gravity ?gravity .}
             OPTIONAL {?planet dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-            FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))
+            ${
+              name !== ""
+                ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
+                : ""
+            }
         }
+        LIMIT 10
     `);
+  return response.results.bindings;
 };
 
-export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
-  const resourceId: string = `:${id}`;
+export const searchPlanetById = async (id: String): Promise<AxiosResponse> => {
+  const resourceId: String = `:${id}`;
   return await executeQuery(`
         SELECT ?name ?image ?mass ?volume ?gravity ?radius ?minTemperature ?meanTemperature ?maxTemperature ?discovered ?discovered ?satelliteOf ?surfaceArea ?orbitalPeriod ?wikipedia ?wikiPageID ?description 
         WHERE {
@@ -103,72 +113,28 @@ export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
     `);
 };
 
-export const getInfosPlanet = async (name: string): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?apoapsis ?periapsis ?averageSpeed ?maxTemperature ?meanTemperature ?minTemperature ?volume
-        WHERE {
-            dbr:${name} dbo:apoapsis ?apoapsis ;
-                        dbo:periapsis ?periapsis ;
-                        dbo:averageSpeed ?averageSpeed ;
-                        dbo:maximumTemperature ?maxTemperature ;
-                        dbo:meanTemperature ?meanTemperature ;
-                        dbo:minimumTemperature ?minTemperature ;
-                        dbo:volume ?volume .
-        }
-        LIMIT 1
-    `);
-};
-
-export const listStars = async (): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?star ?name ?mass ?luminosity ?constellation ?description 
-        WHERE {
-            ?star a dbo:Star .
-            OPTIONAL {?star foaf:name ?name .}
-            OPTIONAL {?star dbo:mass ?mass .}
-            OPTIONAL {?star dbo:luminosity ?luminosity .}
-            OPTIONAL {?star dbo:constellation ?constellation .}
-            OPTIONAL {?star dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-        }
-        LIMIT 50
-    `);
-};
-
-export const listGalaxies = async (): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?galaxy ?name ?type ?distance ?mass ?description 
-        WHERE {
-            ?galaxy a dbo:Galaxy .
-            OPTIONAL {?galaxy foaf:name ?name .}
-            OPTIONAL {?galaxy dbo:type ?type .}
-            OPTIONAL {?galaxy dbo:distance ?distance .}
-            OPTIONAL {?galaxy dbo:mass ?mass .}
-            OPTIONAL {?galaxy dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-        }
-        LIMIT 50
-    `);
-};
-
 export const searchGalaxyByName = async (
-  name: string
+  name: String
 ): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?galaxy ?name ?type ?distance ?mass ?description 
+  const response = await executeQuery(`
+        SELECT ?galaxy ?name ?description 
         WHERE {
             ?galaxy a dbo:Galaxy .
             OPTIONAL {?galaxy foaf:name ?name .}
-            OPTIONAL {?galaxy dbo:type ?type .}
-            OPTIONAL {?galaxy dbo:distance ?distance .}
-            OPTIONAL {?galaxy dbo:mass ?mass .}
             OPTIONAL {?galaxy dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-            FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))
+            ${
+              name !== ""
+                ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
+                : ""
+            }
         }
-        LIMIT 50
+        LIMIT 10
     `);
+  return response.results.bindings;
 };
 
-export const searchGalaxyById = async (id: string): Promise<AxiosResponse> => {
-  const resourceId: string = `:${id}`;
+export const searchGalaxyById = async (id: String): Promise<AxiosResponse> => {
+  const resourceId: String = `:${id}`;
   return await executeQuery(`
       SELECT ?name ?type ?distance ?mass ?description 
         WHERE {
@@ -183,25 +149,27 @@ export const searchGalaxyById = async (id: string): Promise<AxiosResponse> => {
 };
 
 export const searchStarByName = async (
-  name: string
+  name: String
 ): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?star ?name ?type ?distance ?mass ?description 
-        WHERE {
-            ?star a dbo:Galaxy .
-            OPTIONAL {?star foaf:name ?name .}
-            OPTIONAL {?star dbo:type ?type .}
-            OPTIONAL {?star dbo:distance ?distance .}
-            OPTIONAL {?star dbo:mass ?mass .}
-            OPTIONAL {?star dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-            FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))
-        }
-        LIMIT 50
-    `);
+  const response = await executeQuery(`
+  SELECT ?star ?name ?description 
+  WHERE {
+      ?star a dbo:Star .
+      OPTIONAL {?star foaf:name ?name .}
+      OPTIONAL {?star dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+      ${
+        name !== ""
+          ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
+          : ""
+      }
+  }
+  LIMIT 10
+`);
+  return response.results.bindings;
 };
 
-export const searchStarById = async (id: string): Promise<AxiosResponse> => {
-  const resourceId: string = `:${id}`;
+export const searchStarById = async (id: String): Promise<AxiosResponse> => {
+  const resourceId: String = `:${id}`;
   return await executeQuery(`
   SELECT ?name ?type ?distance ?mass ?description ?wikiTitle
   WHERE {
@@ -223,30 +191,22 @@ export const searchStarById = async (id: string): Promise<AxiosResponse> => {
 };
 
 export const searchStarWikidata = async (
-  id: string
+  id: String
 ): Promise<AxiosResponse> => {
-  const resourceId: string = `:${id}`;
-  return await executeQuery(`
-  SELECT ?name ?type ?distance ?mass ?description ?wikiTitle
+  const resourceId: String = `${id}`;
+  return await executeWikiQuery(`
+  SELECT ?mass ?radius ?distanceFromEarth
   WHERE {
-    :Aldebaran a dbo:Star .
-    OPTIONAL {:Aldebaran foaf:name ?name .}
-    OPTIONAL {:Aldebaran dbo:type ?type .}
-    OPTIONAL {:Aldebaran dbo:distance ?distance .}
-    OPTIONAL {:Aldebaran dbo:mass ?mass .}
-    OPTIONAL {
-      :Aldebaran foaf:isPrimaryTopicOf ?wikipedia .
-      BIND(REPLACE(STR(?wikipedia), "^http://en.wikipedia.org/wiki/", "") AS ?wikiTitle)
-    }
-    OPTIONAL {
-      :Aldebaran dbo:abstract ?description 
-      FILTER(LANG(?description) = 'en') .
-    }
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+    ?sun rdfs:label "${resourceId}"@en .
+    ?sun wdt:P2067 ?mass .
+    ?sun wdt:P2120 ?radius .
+    ?sun wdt:P2583 ?distanceFromEarth .
   }
     `);
 };
 
-export const getWikipediaImage = async (id: string) => {
+export const getWikipediaImage = async (id: String) => {
   try {
     const { data } = await axios.get(
       "https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php",

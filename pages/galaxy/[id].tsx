@@ -22,15 +22,17 @@ interface Galaxy {
 
 const Galaxy: React.FC<GalaxyProps> = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const id = router.query.id as string;
 
   const [loading, setLoading] = useState(true);
   const [galaxy, setGalaxy] = useState<Galaxy>();
-  const [modelPath, setModelPath] = useState("/models/unknown_galaxy/scene.gltf"); // New state variable for model path
+  const [modelPath, setModelPath] = useState(
+    "/models/unknown_galaxy/scene.gltf"
+  ); // New state variable for model path
 
   useEffect(() => {
     if (!id) return;
-    searchGalaxyById(id as string)
+    searchGalaxyById(id)
       .then((response) => {
         const galaxy = (response as any)?.results?.bindings[0];
         console.log(galaxy);
@@ -39,7 +41,7 @@ const Galaxy: React.FC<GalaxyProps> = () => {
             galaxy[key] = galaxy[key]?.value;
           }
 
-          getWikipediaImage(id as string)
+          getWikipediaImage(id)
             .then((imageURL) => {
               if (galaxy) {
                 galaxy.imageWikipedia = imageURL!;
@@ -66,11 +68,9 @@ const Galaxy: React.FC<GalaxyProps> = () => {
   }, [id]);
 
   // Function to simulate checking if the model path exists
-  const checkModelPath = (galaxyName) => {
+  const checkModelPath = (galaxyName: string) => {
     // Replace this logic with your actual check
-    const knownGalaxys = [
-      "Milky_Way"
-    ]; // Example list of known galaxys
+    const knownGalaxys = ["Milky_Way"]; // Example list of known galaxys
     const pathExists = knownGalaxys.includes(galaxyName);
     setModelPath(
       pathExists
@@ -82,7 +82,7 @@ const Galaxy: React.FC<GalaxyProps> = () => {
   return (
     <>
       <Head>
-        <title>{(galaxy ? id : "Loading") as ReactNode}</title>
+        <title>{(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}</title>
       </Head>
       <div className="flex flex-col flex-grow overflow-x-hidden overflow-y-auto">
         <div className="flex flex-row justify-galaxyt">
@@ -96,17 +96,15 @@ const Galaxy: React.FC<GalaxyProps> = () => {
             />
           </Link>
           <h1 className="title mb-15">
-            {(galaxy ? id : "Loading") as ReactNode}
+            {(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}
           </h1>
-          </div>
+        </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-4 gap-x-2">
             <div className="col-span-1 flex flex-col items-left">
-              {galaxy?.name === "Saturn" ? (
-                <SaturnCanvas />
-              ) : (
-                <CustomCanvas modelPath={modelPath} type="galaxy"/>
-              )}
+              <div className="object-3d">
+                <CustomCanvas modelPath={modelPath} type="galaxy" />
+              </div>
               <Image
                 className="mb-2 rounded-xl"
                 src={galaxy?.imageWikipedia || galaxy?.image || "/logo.gif"}
@@ -144,10 +142,10 @@ const Galaxy: React.FC<GalaxyProps> = () => {
               {galaxy?.description &&
                 renderSection("Description", galaxy.description)}
             </div>
+          </div>
         </div>
-        </div>
-        </div>
-      </>
+      </div>
+    </>
   );
 };
 
