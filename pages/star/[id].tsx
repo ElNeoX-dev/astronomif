@@ -33,7 +33,7 @@ const Star: React.FC<StarProps> = () => {
     searchStarById(id as string)
       .then((response) => {
         const star = (response as any)?.results?.bindings[0];
-        console.log(star);
+        console.log(response);
         if (star) {
           for (const key in star) {
             star[key] = star[key]?.value;

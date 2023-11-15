@@ -32,7 +32,7 @@ interface Planet {
 
 const Planet: React.FC<PlanetProps> = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const id = router.query.id as string;
 
   const [loading, setLoading] = useState(true);
   const [planet, setPlanet] = useState<Planet>();
@@ -40,7 +40,7 @@ const Planet: React.FC<PlanetProps> = () => {
 
   useEffect(() => {
     if (!id) return;
-    searchPlanetById(id as string)
+    searchPlanetById(id)
       .then((response) => {
         const planet = (response as any)?.results?.bindings[0];
         console.log(planet);
@@ -49,7 +49,7 @@ const Planet: React.FC<PlanetProps> = () => {
             planet[key] = planet[key]?.value;
           }
 
-          getWikipediaImage(id as string)
+          getWikipediaImage(id)
             .then((imageURL) => {
               if (planet) {
                 planet.imageWikipedia = imageURL!;
@@ -76,7 +76,7 @@ const Planet: React.FC<PlanetProps> = () => {
   }, [id]);
 
   // Function to simulate checking if the model path exists
-  const checkModelPath = (planetName) => {
+  const checkModelPath = (planetName: string) => {
     // Replace this logic with your actual check
     const knownPlanets = [
       "Mercury",
@@ -102,7 +102,7 @@ const Planet: React.FC<PlanetProps> = () => {
   return (
     <>
       <Head>
-        <title>{(planet ? planet.name : "Loading") as ReactNode}</title>
+        <title>{(id || "Loading") as ReactNode}</title>
       </Head>
       <div className="flex flex-col gap-2 py-2 px-4 overflow-y-scroll">
         <div className="flex flex-row justify-start">
@@ -130,7 +130,7 @@ const Planet: React.FC<PlanetProps> = () => {
               <Image
                 className="mb-2 rounded-xl"
                 src={planet?.imageWikipedia || planet?.image || "/logo.gif"}
-                alt={planet?.name || "Loading"}
+                alt={id || "Loading"}
                 width={300}
                 height={300}
               />

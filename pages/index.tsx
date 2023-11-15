@@ -41,7 +41,7 @@ export default function Home() {
           width="300"
           alt="Astronom'IF Logo"
           className="logo-class"
-          style={{ maxWidth: "100px", margin: "0 auto"}}
+          style={{ maxWidth: "100px", margin: "0 auto" }}
         />
         <h1 className="title mb-15">Astronom'IF</h1>
         <h2 className="font-thin opacity-50 text-center unselectable">
@@ -58,24 +58,30 @@ export default function Home() {
             setIsLoading={setIsLoading}
           />
         )}
-        <div className="flex flex-row self-center">
+      </div>
+      {!isFocused && (
+        <div
+          className={`flex flex-row self-center ${
+            !isFocused ? "fade-out" : ""
+          }`}
+        >
           <div className="galaxy">
-            <CustomButton onClick={async () => {}}>
+            <CustomButton onClick={async () => {}} state={galaxyFilter}>
               <GalaxyCanvas />
             </CustomButton>
           </div>
           <div className="galaxy">
-            <CustomButton onClick={async () => {}}>
+            <CustomButton onClick={async () => {}} state={planetFilter}>
               <EarthCanvas />
             </CustomButton>
           </div>
           <div className="galaxy">
-            <CustomButton onClick={async () => {}}>
+            <CustomButton onClick={async () => {}} state={starFilter}>
               <SunCanvas />
             </CustomButton>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

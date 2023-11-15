@@ -1,7 +1,7 @@
 interface CustomButtonProps {
   onClick: () => void;
   children?: React.ReactNode;
-  state: boolean;
+  state: Boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
