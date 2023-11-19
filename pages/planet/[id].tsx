@@ -140,11 +140,13 @@ const Planet: React.FC<PlanetProps> = () => {
                 priority
               />
               <span className="flex-grow mr-2">
-                {planet?.mass && renderSubSection("Mass", planet.mass + "kg")}
-                {planet?.volume && renderSubSection("Volume", planet.volume)}
-                {planet?.radius && renderSubSection("Radius", planet.radius)}
+                {planet?.mass && renderSubSection("Mass", planet.mass + " kg")}
+                {planet?.volume &&
+                  renderSubSection("Volume", planet.volume + "e14 km³")}
+                {planet?.radius &&
+                  renderSubSection("Radius", planet.radius + " km")}
                 {planet?.discovered &&
-                  renderSubSection("Date of discover", planet.discovered)}
+                  renderSubSection("Date of discovery", planet.discovered)}
                 {planet?.discoverer &&
                   renderSubSection("Discoverer", planet.discoverer)}
                 {planet?.meanTemperature &&
@@ -152,17 +154,17 @@ const Planet: React.FC<PlanetProps> = () => {
                   planet?.maxTemperature &&
                   renderSubSection(
                     "Temperature",
-                    "Minimum : " + planet.minTemperature + "K",
-                    "Maximum : " + planet.maxTemperature + "K",
-                    "Mean : " + planet.meanTemperature + "K"
+                    "Minimum: " + planet.minTemperature + " K",
+                    "Maximum: " + planet.maxTemperature + " K",
+                    "Mean: " + planet.meanTemperature + " K"
                   )}
                 {planet?.satelliteOf &&
                   renderSubSection("Satellite of", planet.satelliteOf)}
                 {planet?.surfaceArea &&
-                  renderSubSection("Surface", planet.surfaceArea)}
+                  renderSubSection("Surface", planet.surfaceArea + " km²")}
               </span>
             </div>
-            <div className="col-span-3">
+            <div className="col-span-3 pr-3">
               {planet?.description &&
                 renderSection("Description", planet.description)}
             </div>

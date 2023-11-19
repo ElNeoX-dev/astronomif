@@ -14,6 +14,9 @@ interface SearchBoxProps {
   searchTerm: String;
   isLoading: Boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<Boolean>>;
+  galaxyFilter: Boolean;
+  planetFilter: Boolean;
+  starFilter: Boolean;
 }
 
 interface Item {
@@ -27,6 +30,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   searchTerm,
   isLoading,
   setIsLoading,
+  galaxyFilter,
+  planetFilter,
+  starFilter,
 }) => {
   const [items, setItems] = useState<Item[]>([]);
 
@@ -38,11 +44,21 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     (async () => {
       try {
         setItems([]);
-        console.log("AZOIEJAZOIEJ");
-        const responseGalaxy = (await searchGalaxyByName(searchTerm)) as any;
-        console.log("aze");
-        const responsePlanet = (await searchPlanetByName(searchTerm)) as any;
-        const responseStar = (await searchStarByName(searchTerm)) as any;
+        const allFiltersInactive =
+          !galaxyFilter && !planetFilter && !starFilter;
+
+        const responseGalaxy =
+          galaxyFilter || allFiltersInactive
+            ? ((await searchGalaxyByName(searchTerm)) as any)
+            : [];
+        const responsePlanet =
+          planetFilter || allFiltersInactive
+            ? ((await searchPlanetByName(searchTerm)) as any)
+            : [];
+        const responseStar =
+          starFilter || allFiltersInactive
+            ? ((await searchStarByName(searchTerm)) as any)
+            : [];
         const response: Item[] = [];
         for (
           let i = 0;
@@ -54,21 +70,24 @@ const SearchBox: React.FC<SearchBoxProps> = ({
           );
           i++
         ) {
-          responseGalaxy[i] &&
+          responseGalaxy &&
+            responseGalaxy[i] &&
             response.push({
               title: responseGalaxy[i].name.value,
               type: "Galaxy",
               link: `/galaxy/${getIdFromUri(responseGalaxy[i].galaxy.value)}`,
               description: responseGalaxy[i].description.value,
             });
-          responsePlanet[i] &&
+          responsePlanet &&
+            responsePlanet[i] &&
             response.push({
               title: responsePlanet[i].name.value,
               type: "Planet",
               link: `/planet/${getIdFromUri(responsePlanet[i].planet.value)}`,
               description: responsePlanet[i].description.value,
             });
-          responseStar[i] &&
+          responseStar &&
+            responseStar[i] &&
             response.push({
               title: responseStar[i].name.value,
               type: "Star",
@@ -82,7 +101,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
       }
       setIsLoading(false);
     })();
-  }, [searchTerm]);
+  }, [searchTerm, galaxyFilter, planetFilter, starFilter]);
 
   return (
     <>

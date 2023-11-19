@@ -21,14 +21,17 @@ interface StarProps {}
 interface Star {
   name?: string;
   type?: string;
+  image?: string;
+  imageWikipedia?: string;
   distance?: string;
   mass?: string;
   description?: string;
+  wikipedia?: string;
 }
 
 const Star: React.FC<StarProps> = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const id = router.query.id as string;
 
   const [loading, setLoading] = useState(true);
   const [star, setStar] = useState<Star>();
@@ -86,7 +89,7 @@ const Star: React.FC<StarProps> = () => {
       <Head>
         <title>{(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}</title>
       </Head>
-      <div className="flex flex-col flex-grow overflow-x-hidden overflow-y-auto">
+      <div className="flex flex-col py-2 px-4 flex-grow overflow-x-hidden overflow-y-auto">
         <div className="flex flex-row justify-start">
           <Link href="/">
             <Image
@@ -115,32 +118,10 @@ const Star: React.FC<StarProps> = () => {
                 height={300}
               />
               <span className="flex-grow mr-2">
-                {star?.mass && renderSubSection("Mass", star.mass + "kg")}
-                {star?.volume && renderSubSection("Volume", star.volume)}
-                {star?.radius && renderSubSection("Radius", star.radius)}
-                {star?.discovered &&
-                  renderSubSection("Date of discover", star.discovered)}
-                {star?.discoverer &&
-                  renderSubSection("Discoverer", star.discoverer)}
-                {star?.meanTemperature &&
-                  star?.minTemperature &&
-                  star?.maxTemperature &&
-                  renderSubSection(
-                    "Temperature",
-                    "Minimum : " +
-                      star.minTemperature +
-                      "\nMaxmimum : " +
-                      star.maxTemperature +
-                      "\nMean : " +
-                      star.meanTemperature
-                  )}
-                {star?.satelliteOf &&
-                  renderSubSection("Satellite of", star.satelliteOf)}
-                {star?.surfaceArea &&
-                  renderSubSection("Surface", star.surfaceArea)}
+                {star?.mass && renderSubSection("Mass", star.mass + " kg")}
               </span>
             </div>
-            <div className="col-span-3">
+            <div className="col-span-3 pr-3">
               {star?.description &&
                 renderSection("Description", star.description)}
             </div>

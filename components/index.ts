@@ -4,7 +4,6 @@ import MouseEffect from "./MouseEffect";
 import ListItem from "./ListItem";
 import SearchBox from "./SearchBox";
 import CustomButton from "./CustomButton";
-import CustomButton2 from "./CustomButton2";
 import EarthCanvas from "./EarthCanvas";
 import GalaxyCanvas from "./GalaxyCanvas";
 import SunCanvas from "./SunCanvas";
@@ -18,7 +17,6 @@ export {
   ListItem,
   SearchBox,
   CustomButton,
-  CustomButton2,
   EarthCanvas,
   GalaxyCanvas,
   SunCanvas,

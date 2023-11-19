@@ -64,6 +64,9 @@ export default function Home() {
             searchTerm={searchTerm}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
+            galaxyFilter={galaxyFilter}
+            planetFilter={planetFilter}
+            starFilter={starFilter}
           />
         )}
       </div>

@@ -31,6 +31,24 @@
   }
 }
 
+* {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.25);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background-color: black;
@@ -80,7 +98,7 @@ body {
 }
 
 .researchDiv:focus-within {
-  margin-top: -20vh;
+  margin-top: -18vh;
   transition: 0.7s ease-in-out;
 }
 

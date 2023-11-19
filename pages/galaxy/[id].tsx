@@ -15,9 +15,11 @@ interface GalaxyProps {}
 interface Galaxy {
   name?: string;
   type?: string;
-  distance?: string;
-  mass?: string;
+  image?: string;
+  imageWikipedia?: string;
+  stars?: string;
   description?: string;
+  wikipedia?: string;
 }
 
 const Galaxy: React.FC<GalaxyProps> = () => {
@@ -84,7 +86,7 @@ const Galaxy: React.FC<GalaxyProps> = () => {
       <Head>
         <title>{(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}</title>
       </Head>
-      <div className="flex flex-col flex-grow overflow-x-hidden overflow-y-auto">
+      <div className="flex py-2 px-4 flex-col flex-grow overflow-x-hidden overflow-y-auto hide-scrollbar">
         <div className="flex flex-row justify-galaxyt">
           <Link href="/">
             <Image
@@ -113,32 +115,12 @@ const Galaxy: React.FC<GalaxyProps> = () => {
                 height={300}
               />
               <span className="flex-grow mr-2">
-                {galaxy?.mass && renderSubSection("Mass", galaxy.mass + "kg")}
-                {galaxy?.volume && renderSubSection("Volume", galaxy.volume)}
-                {galaxy?.radius && renderSubSection("Radius", galaxy.radius)}
-                {galaxy?.discovered &&
-                  renderSubSection("Date of discover", galaxy.discovered)}
-                {galaxy?.discoverer &&
-                  renderSubSection("Discoverer", galaxy.discoverer)}
-                {galaxy?.meanTemperature &&
-                  galaxy?.minTemperature &&
-                  galaxy?.maxTemperature &&
-                  renderSubSection(
-                    "Temperature",
-                    "Minimum : " +
-                      galaxy.minTemperature +
-                      "\nMaxmimum : " +
-                      galaxy.maxTemperature +
-                      "\nMean : " +
-                      galaxy.meanTemperature
-                  )}
-                {galaxy?.satelliteOf &&
-                  renderSubSection("Satellite of", galaxy.satelliteOf)}
-                {galaxy?.surfaceArea &&
-                  renderSubSection("Surface", galaxy.surfaceArea)}
+                {galaxy?.type && renderSubSection("Type", galaxy.type + "")}
+                {galaxy?.stars &&
+                  renderSubSection("Number of stars", galaxy.stars + "")}
               </span>
             </div>
-            <div className="col-span-3">
+            <div className="col-span-3 pr-3">
               {galaxy?.description &&
                 renderSection("Description", galaxy.description)}
             </div>
