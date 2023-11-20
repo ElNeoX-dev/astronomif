@@ -43,7 +43,7 @@ export default function Home() {
       <Head>
         <title>Astronom'IF</title>
       </Head>
-      <div className="flex flex-col researchDiv">
+      <div className="flex flex-col researchDiv w-full justify-center items-center">
         <img
           src="/logo.gif"
           width="300"
