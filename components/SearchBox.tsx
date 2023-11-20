@@ -108,7 +108,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
       {isLoading ? (
         <Loading />
       ) : (
-        <div className="flex-col flex rounded-xl bg-white/20">
+        <div className="flex-col flex rounded-xl bg-white/20 w-4/5 overflow-y-scroll h-96">
           {items?.map((item) => (
             <ListItem
               key={item.title}

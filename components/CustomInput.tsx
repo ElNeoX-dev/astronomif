@@ -13,7 +13,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       className="input self-center sliding-cursor-input z-10"
       placeholder="Astronomic search 🪐"
       onChange={onChange}
-      onFocus={() => setTimeout(() => setIsFocused(true), 0)}
+      onFocus={() => setIsFocused(true)}
       onBlur={() => setTimeout(() => setIsFocused(false), 250)}
     />
   );
