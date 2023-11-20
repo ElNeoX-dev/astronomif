@@ -312,11 +312,36 @@ export const searchStarWikidata = async (
     `);
 };
 
+
 export const searchPlanetWikidata = async (
   id: String
 ): Promise<AxiosResponse> => {
   const resourceId: String = `${id}`;
   return await executeWikiQuery(`
+  SELECT DISTINCT ?mass ?radius ?distanceFromSun ?density ?orbitalPeriod ?rotationalPeriod ?escapeVelocity ?axialTilt ?meanTemperature ?surfacePressure ?numberOfMoons ?atmosphericComposition ?parentAstronomicalBody ?image
+    WHERE {
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      ?planet rdfs:label "${resourceId}"@en .
+      OPTIONAL { ?planet wdt:P2067 ?mass. }
+      OPTIONAL { ?planet wdt:P2120 ?radius. }
+      OPTIONAL { ?planet wdt:P2227 ?density. }
+      OPTIONAL { ?planet wdt:P2224 ?orbitalPeriod. }
+      OPTIONAL { ?planet wdt:P376 ?rotationalPeriod. }
+      OPTIONAL { ?planet wdt:P2228 ?escapeVelocity. }
+      OPTIONAL { ?planet wdt:P2583 ?distanceFromSun. }
+      OPTIONAL { ?planet wdt:P354 ?axialTilt. }
+      OPTIONAL { ?planet wdt:P2076 ?meanTemperatureStatement.
+                ?meanTemperatureStatement ps:P2076 ?meanTemperatureValue.
+                FILTER(?meanTemperatureStatement = wd:Q20833) }
+      OPTIONAL { ?planet wdt:P2076 ?surfacePressureStatement.
+                ?surfacePressureStatement ps:P2076 ?surfacePressureValue.
+                FILTER(?surfacePressureStatement = wd:Q27610) }
+      OPTIONAL { ?planet wdt:P556 ?numberOfMoons. }
+      OPTIONAL { ?planet wdt:P189 ?atmosphericComposition. }
+      OPTIONAL { ?planet wdt:P397 ?parentAstronomicalBody. }
+      OPTIONAL { ?planet wdt:P18 ?image. }
+    }
+    LIMIT 1
   
   `);
 };
@@ -326,7 +351,19 @@ export const searchGalaxyWikidata = async (
 ): Promise<AxiosResponse> => {
   const resourceId: String = `${id}`;
   return await executeWikiQuery(`
-  
+  SELECT DISTINCT ?mass ?radius ?distance ?type ?constellation ?image
+    WHERE {
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      ?galaxy rdfs:label "${resourceId}"@en .
+      OPTIONAL { ?galaxy wdt:P2067 ?mass. }
+      OPTIONAL { ?galaxy wdt:P2120 ?radius. }
+      OPTIONAL { ?galaxy wdt:P2583 ?distance. }
+      OPTIONAL { ?galaxy wdt:P2920 ?type. }
+      OPTIONAL { ?galaxy wdt:P396 ?constellation. }
+      OPTIONAL { ?galaxy wdt:P18 ?image. }
+    }
+    LIMIT 1
+
   `);
 };
 
