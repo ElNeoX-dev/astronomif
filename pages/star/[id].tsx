@@ -155,7 +155,7 @@ const Star: React.FC<StarProps> = () => {
   
 
   // Function to simulate checking if the model path exists
-  const checkModelPath = (starName) => {
+  const checkModelPath = (starName: string) => {
     // Replace this logic with your actual check
     const knownStars = ["Sun"]; // Example list of known stars
     const pathExists = knownStars.includes(starName);

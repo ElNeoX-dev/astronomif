@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Astronom'IF</title>
+        <title>Astronom&apos;IF</title>
       </Head>
       <div className="flex flex-col researchDiv w-full justify-center items-center">
         <img
@@ -51,7 +51,7 @@ export default function Home() {
           className="logo-class"
           style={{ maxWidth: "100px", margin: "0 auto" }}
         />
-        <h1 className="title mb-15">Astronom'IF</h1>
+        <h1 className="title mb-15">Astronom&apos;IF</h1>
         <h2 className="font-thin opacity-50 text-center unselectable">
           The first dedicated astronomy search engine
         </h2>

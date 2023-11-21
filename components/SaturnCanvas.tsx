@@ -38,8 +38,6 @@ const SaturnCanvas: React.FC = () => {
   return (
     <Canvas
       className="mb-2 rounded-xl"
-      width={300}
-      height={300}
       shadows
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}

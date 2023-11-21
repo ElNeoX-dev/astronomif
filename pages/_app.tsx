@@ -24,7 +24,7 @@ const RootLayout: React.FC<LayoutProps> = ({ Component, pageProps }) => {
     <>
       <Head>
         <link rel="icon" href="/icon.svg" />
-        <title>Astronom'IF</title>
+        <title>Astronom&apos;IF</title>
       </Head>
       <MouseEffect />
       <div className="min-h-screen max-h-screen overflow-hidden flex">

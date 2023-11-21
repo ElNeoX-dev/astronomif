@@ -35,13 +35,11 @@ const CustomModel: React.FC<CustomModelProps> = ({ modelPath, type }) => {
 
 const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath, type }) => {
   // Adjust camera position based on type
-  const cameraPosition = type === "galaxy" ? [-4, 3, 6] : [-80, 3, 6];
+  const cameraPosition: [number, number, number] = type === "galaxy" ? [-4, 3, 6] : [-80, 3, 6];
 
   return (
     <Canvas
       className="mb-2 rounded-xl"
-      width={300}
-      height={300}
       shadows
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
@@ -53,8 +51,8 @@ const CustomCanvas: React.FC<CustomModelProps> = ({ modelPath, type }) => {
       }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
-        <CustomModel modelPath={modelPath} type={type} enablePan={false} />
+        <OrbitControls enableZoom={false} enablePan={false} />
+        <CustomModel modelPath={modelPath} type={type} />
 
         <Preload all />
       </Suspense>
