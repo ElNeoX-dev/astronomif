@@ -77,7 +77,7 @@ const Galaxy: React.FC<GalaxyProps> = () => {
     setModelPath(
       pathExists
         ? `/models/${galaxyName}/scene.gltf`
-        : "/models/unknown/scene.gltf"
+        : "/models/unknown_galaxy/scene.gltf"
     );
   };
 
