@@ -1,3 +1,4 @@
+"use client";
 interface CustomButtonProps {
   children?: React.ReactNode;
   setState: React.Dispatch<React.SetStateAction<Boolean>>;

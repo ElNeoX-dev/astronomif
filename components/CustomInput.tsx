@@ -1,3 +1,4 @@
+"use client";
 interface CustomInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setIsFocused: React.Dispatch<React.SetStateAction<Boolean>>;

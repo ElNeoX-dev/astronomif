@@ -1,8 +1,10 @@
+"use client";
 import type { Metadata } from "next";
 import Head from "next/head";
 import { Cabin } from "next/font/google";
 import "@/app/globals.css";
 import "@/app/loading.css";
+
 
 import { MouseEffect } from "@/components";
 

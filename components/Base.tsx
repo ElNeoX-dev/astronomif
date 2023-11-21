@@ -1,3 +1,4 @@
+"use client";
 interface BaseProps {
   children: React.ReactNode;
 }
