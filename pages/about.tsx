@@ -4,7 +4,6 @@ import Head from "next/head";
 import Image from "next/image";
 import { CustomCanvas } from "@/components";
 
-import {renderSection } from "@/utils";
 import Link from "next/link";
 import { renderSubSection } from "@/utils/utils";
 
