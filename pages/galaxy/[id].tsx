@@ -4,11 +4,16 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { CustomCanvas, SaturnCanvas } from "@/components";
 
-import { searchGalaxyById, getWikipediaImage, renderSection } from "@/utils";
+import {
+  searchGalaxyByIdWiki,
+  searchGalaxyByNameDBP,
+  getWikipediaImage,
+  getType,
+} from "@/utils";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { renderSubSection } from "@/utils/utils";
+import { renderSubSection, renderSection } from "@/utils/utils";
 
 interface GalaxyProps {}
 
@@ -33,40 +38,55 @@ const Galaxy: React.FC<GalaxyProps> = () => {
   ); // New state variable for model path
 
   useEffect(() => {
-    if (!id) return;
-    searchGalaxyById(id)
-      .then((response) => {
-        const galaxy = (response as any)?.results?.bindings[0];
-        console.log(galaxy);
-        if (galaxy) {
-          for (const key in galaxy) {
-            galaxy[key] = galaxy[key]?.value;
+    (async function fetchData() {
+      if (!id) return;
+      try {
+        const responseWikidata = await searchGalaxyByIdWiki(id);
+        const galaxyWiki = responseWikidata.at(0);
+        if (galaxyWiki) {
+          for (const key in galaxyWiki) {
+            galaxyWiki[key] = galaxyWiki[key]?.value;
           }
 
-          getWikipediaImage(id)
-            .then((imageURL) => {
-              if (galaxy) {
-                galaxy.imageWikipedia = imageURL!;
-              }
-              setGalaxy(galaxy);
-              checkModelPath(id); // Check for model path when a galaxy is found
-              console.log(imageURL);
-            })
-            .catch((error) => {
-              console.log(error);
-              alert("Image not found");
-            });
-          setLoading(false);
+          const responseDBP = await searchGalaxyByNameDBP(galaxyWiki.name);
+          const galaxyDBP = responseDBP.at(0);
+
+          if (galaxyDBP) {
+            for (const key in galaxyWiki) {
+              galaxyWiki[key] = galaxyWiki[key]?.value;
+            }
+          }
+
+          const mergedGalaxy = {
+            ...galaxyDBP,
+            ...galaxyWiki,
+          };
+
+          setGalaxy(mergedGalaxy);
+
+          try {
+            const imageURL = await getWikipediaImage(id as string);
+            mergedGalaxy.imageURL = imageURL;
+          } catch (error) {
+            console.log(error);
+          }
+          const type = await getType(
+            galaxyWiki?.parentAstronomicalBody?.split("/").at(-1)!
+          );
+          mergedGalaxy.typeParent = type;
+          console.log(mergedGalaxy);
+
+          setGalaxy(mergedGalaxy);
+
+          checkModelPath(id);
         } else {
           alert("Galaxy not found");
         }
-
-        // setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-        alert("Galaxy not found");
-      });
+      }
+      setLoading(false);
+    })();
   }, [id]);
 
   // Function to simulate checking if the model path exists

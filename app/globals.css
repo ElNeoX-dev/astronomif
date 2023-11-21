@@ -118,13 +118,14 @@ body {
 }
 
 .input {
+  width: min(300px, 80vw);
+  height: min(6vh, 60px);
   border: none;
   outline: none;
   border-radius: 15px;
   padding: 1em;
   background-color: #ccc;
   box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
-  width: 300px;
   margin: 20px;
   transition: 0.7s ease-in-out;
 }
@@ -164,6 +165,7 @@ body {
 }
 
 .glassBackground {
+  margin: min(24px, 1vh);
   background: rgba(255, 255, 255, 0.07);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(18.2px);
@@ -174,7 +176,14 @@ body {
   text-align: center;
   /* margin-top: 10vh; */
   opacity: 0.6;
-  @apply text-8xl unselectable font-bold;
+  font-size: min(10vh, 10vw);
+  @apply unselectable font-bold;
+}
+
+.logo-class {
+  margin: 0 auto;
+  height: 15vh;
+  width: 15vh;
 }
 
 .btn {
@@ -223,9 +232,25 @@ hr.rounded {
   box-shadow: 5px 5px 80px #00419b, -5px -5px 80px #ffffff;
 }
 
+.item:hover {
+  transform: scale(1.02);
+  color: rgb(255, 251, 0);
+  transition: ease-in-out 0.3s;
+}
+
+.item {
+  color: white;
+  transition: ease-in-out 0.3s;
+}
+
+.font-responsive {
+  font-size: min(2.5vh, 4vw);
+}
+
 .filter-out {
   overflow-y: hidden;
   height: 0vh;
+  width: 0%;
   animation-duration: 0.7s;
   animation-name: filterIn;
   animation-timing-function: ease-in-out;
@@ -234,6 +259,7 @@ hr.rounded {
 .filter-in {
   overflow-y: hidden;
   height: 50vh;
+  width: 100%;
   animation-duration: 0.7s;
   animation-name: filterOut;
   animation-timing-function: ease-in-out;
@@ -242,19 +268,23 @@ hr.rounded {
 @keyframes filterIn {
   from {
     height: 50vh;
+    width: 100%;
   }
 
   to {
     height: 0vh;
+    width: 0px;
   }
 }
 
 @keyframes filterOut {
   from {
     height: 0vh;
+    width: 0px;
   }
 
   to {
     height: 50vh;
+    width: 100%;
   }
 }

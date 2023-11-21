@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 import { ListItem, Loading } from ".";
 import {
-  searchGalaxyByName,
-  searchPlanetByName,
-  searchStarByName,
+  searchGalaxyByNameWiki,
+  searchPlanetByNameWiki,
+  searchStarByNameWiki,
 } from "@/utils";
 import { get } from "https";
 
@@ -47,17 +47,18 @@ const SearchBox: React.FC<SearchBoxProps> = ({
         const allFiltersInactive =
           !galaxyFilter && !planetFilter && !starFilter;
 
-        const responseGalaxy =
-          galaxyFilter || allFiltersInactive
-            ? ((await searchGalaxyByName(searchTerm)) as any)
-            : [];
         const responsePlanet =
           planetFilter || allFiltersInactive
-            ? ((await searchPlanetByName(searchTerm)) as any)
+            ? ((await searchPlanetByNameWiki(searchTerm)) as any)
+            : [];
+        console.log(responsePlanet);
+        const responseGalaxy =
+          galaxyFilter || allFiltersInactive
+            ? ((await searchGalaxyByNameWiki(searchTerm)) as any)
             : [];
         const responseStar =
           starFilter || allFiltersInactive
-            ? ((await searchStarByName(searchTerm)) as any)
+            ? ((await searchStarByNameWiki(searchTerm)) as any)
             : [];
         const response: Item[] = [];
         for (

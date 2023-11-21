@@ -29,7 +29,7 @@ const RootLayout: React.FC<LayoutProps> = ({ Component, pageProps }) => {
       <MouseEffect />
       <div className="min-h-screen max-h-screen overflow-hidden flex">
         <div id="background" />
-        <div className="m-6 glassBackground rounded-tl-[30px] rounded-br-[30px] flex-grow overflow-hidden">
+        <div className="glassBackground rounded-tl-[30px] rounded-br-[30px] flex-grow overflow-hidden">
           <main
             className={`${cabin.className} text-white flex w-full h-full flex-col items-center`}
           >

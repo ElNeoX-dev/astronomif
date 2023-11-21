@@ -1,9 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 
-import { renderSection } from "./utils";
-
-export { renderSection };
-
 const prefixes =
   "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n\
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\
@@ -26,6 +22,16 @@ const prefixesWiki =
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\
   PREFIX bd: <http://www.bigdata.com/rdf#>\n\
   PREFIX service: <http://wikiba.se/ontology#label>";
+
+const listGalaxyCodes = [
+  // "Q318",
+  "Q2488",
+];
+const listPlanetCodes = ["Q634", "Q128207"];
+const listStarCodes = [
+  // "Q523",
+  "Q5864",
+];
 
 export const executeQuery = async (query: String): Promise<any> => {
   try {
@@ -51,320 +57,293 @@ export const executeWikiQuery = async (query: String) => {
   }
 };
 
-export const listPlanets = async (): Promise<AxiosResponse> => {
-  return await executeQuery(`
-        SELECT ?planet ?name ?mass ?volume ?gravity ?description 
-        WHERE {
-            ?planet a dbo:Planet .
-            OPTIONAL {?planet foaf:name ?name .}
-            OPTIONAL {?planet dbo:mass ?mass .}
-            OPTIONAL {?planet dbo:volume ?volume .}
-            OPTIONAL {?planet dbo:gravity ?gravity .}
-            OPTIONAL {?planet dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-        }
-        LIMIT 50
-  `);
-};
-
-export const searchPlanetByName = async (
-  name: String
-): Promise<AxiosResponse> => {
+export const searchPlanetByNameDBP = async (name: String): Promise<any[]> => {
+  const resourceId = `:${name.replace(/ /g, "_")}`;
   const response = await executeQuery(`
-        SELECT ?planet ?name ?description 
+        SELECT ?description ?image ?mass ?volume ?gravity ?radius ?minTemperature ?meanTemperature ?maxTemperature ?discovered ?discovered ?satelliteOf ?surfaceArea ?orbitalPeriod ?wikipedia ?wikiPageID
         WHERE {
-            ?planet a dbo:Planet .
-            OPTIONAL {?planet foaf:name ?name .}
-            OPTIONAL {?planet dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-            ${
-              name !== ""
-                ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
-                : ""
-            }
+            ${resourceId} a dbo:Planet .
+            ${resourceId} foaf:name ?name filter (lang(?name) = "en").
+            OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+            OPTIONAL {${resourceId} dbo:thumbnail ?image .}
+            OPTIONAL {${resourceId} dbo:mass ?mass .}
+            OPTIONAL {${resourceId} dbo:volume ?volume .}
+            OPTIONAL {${resourceId} dbo:gravity ?gravity .}
+            OPTIONAL {${resourceId} dbo:meanRadius ?radius .}
+            OPTIONAL {${resourceId} dbo:meanTemperature ?meanTemperature .}
+            OPTIONAL {${resourceId} dbo:minimumTemperature ?minTemperature .}
+            OPTIONAL {${resourceId} dbo:maximumTemperature ?maxTemperature .}
+            OPTIONAL {${resourceId} dbo:discovered ?discovered .}
+            OPTIONAL {${resourceId} dbo:discoverer ?discoverer .}
+            OPTIONAL {${resourceId} dbo:satelliteOf ?satelliteOf .}
+            OPTIONAL {${resourceId} dbo:surfaceArea ?surfaceArea .}
+            OPTIONAL {${resourceId} dbo:orbitalPeriod ?orbitalPeriod .}
+            OPTIONAL {${resourceId} dbo:isPrimaryTopicOf ?wikipedia .}
+            OPTIONAL {${resourceId} dbo:wikiPageID ?wikiPageID .}
         }
-        LIMIT 10
+        LIMIT 1
     `);
-  return response.results.bindings;
+  return response.results?.bindings;
 };
 
-export const searchPlanetById = async (id: string): Promise<AxiosResponse> => {
-  const resourceId = `:${encodeURIComponent(id)}`;
-  return await executeQuery(`
-        SELECT ?name ?image ?mass ?volume ?gravity ?radius ?minTemperature ?meanTemperature ?maxTemperature ?discovered ?discovered ?satelliteOf ?surfaceArea ?orbitalPeriod ?wikipedia ?wikiPageID ?description 
-        WHERE {
-            ${resourceId.replace("(", "\\(").replace(")", "\\)")} a dbo:Planet.
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} foaf:name ?name}.
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:thumbnail ?image .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:mass ?mass .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:volume ?volume .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:gravity ?gravity .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:meanRadius ?radius .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:meanTemperature ?meanTemperature .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:minimumTemperature ?minTemperature .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:maximumTemperature ?maxTemperature .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:discovered ?discovered .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:discoverer ?discoverer .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:satelliteOf ?satelliteOf .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:surfaceArea ?surfaceArea .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:orbitalPeriod ?orbitalPeriod .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:isPrimaryTopicOf ?wikipedia .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:wikiPageID ?wikiPageID .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(
-                ")",
-                "\\)"
-              )} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-        }
-    `);
-};
-
-export const searchGalaxyByName = async (
-  name: String
-): Promise<AxiosResponse> => {
-  const response = await executeQuery(`
-        SELECT ?galaxy ?name ?description 
-        WHERE {
-            ?galaxy a dbo:Galaxy .
-            OPTIONAL {?galaxy foaf:name ?name .}
-            OPTIONAL {?galaxy dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-            ${
-              name !== ""
-                ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
-                : ""
-            }
-        }
-        LIMIT 10
-    `);
-  return response.results.bindings;
-};
-
-export const searchGalaxyById = async (id: string): Promise<AxiosResponse> => {
-  const resourceId = `:${encodeURIComponent(id)}`;
-  return await executeQuery(`
-      SELECT ?name ?image ?type ?stars ?description ?wikipedia
-        WHERE {
-          ${resourceId.replace("(", "\\(").replace(")", "\\)")} a dbo:Galaxy .
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} foaf:name ?name .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:thumbnail ?image .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbp:type ?type .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbp:stars ?stars .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(")", "\\)")} dbo:isPrimaryTopicOf ?wikipedia .}
-            OPTIONAL {${resourceId
-              .replace("(", "\\(")
-              .replace(
-                ")",
-                "\\)"
-              )} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-        }
-    `);
-};
-
-export const searchStarByName = async (
-  name: String
-): Promise<AxiosResponse> => {
-  const response = await executeQuery(`
-  SELECT ?star ?name ?description 
-  WHERE {
-      ?star a dbo:Star .
-      OPTIONAL {?star foaf:name ?name .}
-      OPTIONAL {?star dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
-      ${
-        name !== ""
-          ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
-          : ""
+export const searchPlanetByNameWiki = async (name: String): Promise<any[]> => {
+  const response = await executeWikiQuery(`
+      SELECT DISTINCT ?name ?description ?instanceType ?planet
+      WHERE {
+        ?planet rdfs:label ?name filter(lang(?name) = 'en').
+        ?planet schema:description ?description filter(lang(?description) = 'en').
+        ?planet wdt:P31 ?instanceType.
+        VALUES ?instanceType {${listPlanetCodes
+          .map((code) => `wd:${code}`)
+          .join(" ")}}
+        ${
+          name !== ""
+            ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
+            : ""
+        }      
       }
-  }
-  LIMIT 10
-`);
-  return response.results.bindings;
-};
-
-export const searchStarById = async (id: string): Promise<AxiosResponse> => {
-  const resourceId = `:${encodeURIComponent(id)}`;
-  return await executeQuery(`
-  SELECT ?name ?image ?distance ?mass ?description ?wikipedia ?wikiTitle
-  WHERE {
-    ${resourceId.replace("(", "\\(").replace(")", "\\)")} a dbo:Star .
-    OPTIONAL {${resourceId
-      .replace("(", "\\(")
-      .replace(")", "\\)")} foaf:name ?name .}
-    OPTIONAL {${resourceId
-      .replace("(", "\\(")
-      .replace(")", "\\)")} dbo:thumbnail ?image .}
-    OPTIONAL {${resourceId
-      .replace("(", "\\(")
-      .replace(")", "\\)")} dbo:distance ?distance .}
-    OPTIONAL {${resourceId
-      .replace("(", "\\(")
-      .replace(")", "\\)")} dbo:mass ?mass .}
-    OPTIONAL {${resourceId
-      .replace("(", "\\(")
-      .replace(")", "\\)")} dbo:isPrimaryTopicOf ?wikipedia .}
-    OPTIONAL {
-      ${resourceId
-        .replace("(", "\\(")
-        .replace(")", "\\)")} foaf:isPrimaryTopicOf ?wikipedia .
-      BIND(REPLACE(STR(?wikipedia), "^http://en.wikipedia.org/wiki/", "") AS ?wikiTitle)
-    }
-    OPTIONAL {
-      ${resourceId
-        .replace("(", "\\(")
-        .replace(")", "\\)")} dbo:abstract ?description 
-      FILTER(LANG(?description) = 'en') .
-    }
-  }
+      GROUP BY ?name ?description ?instanceType ?planet
+      ORDER BY ?name
+      LIMIT 5
     `);
+  return response.results?.bindings;
 };
 
-export const searchStarWikidata = async (
-  id: String
+export const searchPlanetByIdWiki = async (id: string): Promise<any[]> => {
+  const response = await executeWikiQuery(`
+      SELECT DISTINCT 
+        ?name
+        ?mass 
+        ?radius 
+        ?distanceFromEarth
+        ?density 
+        ?orbitalPeriod 
+        ?rotationalPeriod 
+        ?escapeVelocity 
+        ?axialTilt 
+        ?meanTemperatureValue
+        ?surfacePressureValue
+        ?numberOfMoons 
+        ?atmosphericComposition 
+        ?parentAstronomicalBody 
+        ?parentAstronomicalBodyLabel # Label for the parent astronomical body
+        ?image
+        ?gravitationalInfluence 
+        ?albedo
+        (COUNT(?naturalSatellite) AS ?numberOfNaturalSatellites) # Count of natural satellites
+      WHERE {
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        wd:${id} rdfs:label ?name filter (lang(?name) = "en").
+
+        OPTIONAL { wd:${id} wdt:P2067 ?mass. }
+        OPTIONAL { wd:${id} wdt:P2120 ?radius. }
+        OPTIONAL { wd:${id} wdt:P2234 ?density. }
+        OPTIONAL { wd:${id} wdt:P2583 ?distanceFromEarth. }
+
+        OPTIONAL { wd:${id} wdt:P2244 ?orbitalPeriod. }
+        OPTIONAL { wd:${id} wdt:P2146 ?rotationalPeriod. }
+        OPTIONAL { wd:${id} wdt:P2228 ?escapeVelocity. }
+        OPTIONAL { wd:${id} wdt:P2583 ?distanceFromSun. }
+        OPTIONAL { wd:${id} wdt:P2235 ?axialTilt. }
+        OPTIONAL { 
+          wd:${id} p:P2076 ?meanTemperatureStatement.
+          ?meanTemperatureStatement ps:P2076 ?meanTemperatureValue.
+        }
+        OPTIONAL { 
+          wd:${id} p:P2044 ?surfacePressureStatement.
+          ?surfacePressureStatement ps:P2044 ?surfacePressureValue.
+        }
+        OPTIONAL { wd:${id} wdt:P2114 ?atmosphericComposition. }
+        OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. 
+                  ?parentAstronomicalBody rdfs:label ?parentAstronomicalBodyLabel filter (lang(?parentAstronomicalBodyLabel) = "en"). }
+        OPTIONAL { wd:${id} wdt:P18 ?image. }
+        OPTIONAL { wd:${id} wdt:P2229 ?gravitationalInfluence. }
+        OPTIONAL { wd:${id} wdt:P2233 ?albedo. }
+        OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. }
+        OPTIONAL { wd:${id} wdt:P398 ?naturalSatellite. }
+        OPTIONAL { wd:${id} wdt:P376 ?numberOfMoons. }
+      }
+      GROUP BY ?name ?mass ?radius ?distanceFromEarth ?density ?orbitalPeriod ?rotationalPeriod ?escapeVelocity ?axialTilt ?meanTemperatureValue ?surfacePressureValue ?numberOfMoons ?atmosphericComposition ?parentAstronomicalBody ?parentAstronomicalBodyLabel ?image ?gravitationalInfluence ?albedo
+      LIMIT 1
+    `);
+  return response.results?.bindings;
+};
+
+export const searchGalaxyByNameDBP = async (name: String): Promise<any[]> => {
+  const resourceId = `:${name.replace(/ /g, "_")}`;
+  const response = await executeQuery(`
+        SELECT ?description ?image ?type ?stars ?wikipedia
+        WHERE {
+            ${resourceId} a dbo:Galaxy .
+            ${resourceId} foaf:name ?name filter(lang(?name) = "en") .
+            OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+            OPTIONAL {${resourceId} dbo:thumbnail ?image .}
+            OPTIONAL {${resourceId} dbo:type ?type .}
+            OPTIONAL {${resourceId} dbo:stars ?stars .}
+            OPTIONAL {${resourceId} dbo:isPrimaryTopicOf ?wikipedia .}
+        }
+        LIMIT 1
+    `);
+  return response.results?.bindings;
+};
+
+export const searchGalaxyByNameWiki = async (name: String): Promise<any[]> => {
+  const response = await executeWikiQuery(`
+      SELECT DISTINCT ?name ?description ?instanceType ?galaxy
+      WHERE {
+        ?galaxy rdfs:label ?name filter(lang(?name) = 'en').
+        ?galaxy schema:description ?description filter(lang(?description) = 'en').
+        ?galaxy wdt:P31 ?instanceType.
+        VALUES ?instanceType {${listGalaxyCodes
+          .map((code) => `wd:${code}`)
+          .join(" ")}}
+        ${
+          name !== ""
+            ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
+            : ""
+        }      
+      }
+      GROUP BY ?name ?description ?instanceType ?galaxy
+      ORDER BY ?name
+      LIMIT 5
+    `);
+  return response.results?.bindings;
+};
+
+export const searchGalaxyByIdWiki = async (id: string): Promise<any[]> => {
+  const response = await executeWikiQuery(`
+    SELECT DISTINCT 
+        ?name
+        ?mass 
+        ?constellation #?constellationLabel
+        ?childAstronomicalBody ?childAstronomicalBodyLabel 
+        ?parentAstronomicalBody ?parentAstronomicalBodyLabel 
+        ?rotationPeriod 
+        ?galaxyMorphologicalType 
+        ?absoluteMagnitude 
+        ?radius 
+        ?diameter 
+        ?image
+      WHERE {
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        
+        wd:${id} rdfs:label ?name filter(lang(?name) = "en") .
+
+        OPTIONAL { wd:${id} wdt:P527 ?childAstronomicalBody. # Child astronomical bodies
+                  ?childAstronomicalBody rdfs:label ?childAstronomicalBodyLabel. }
+        OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. # Parent astronomical body
+                  ?parentAstronomicalBody rdfs:label ?parentAstronomicalBodyLabel filter (lang(?parentAstronomicalBodyLabel) = "en"). }
+        OPTIONAL { wd:${id} wdt:P2067 ?mass. } # Mass
+        OPTIONAL { wd:${id} wdt:P59 ?constellation. # Constellation
+                  #?constellation rdfs:label ?constellationLabel. 
+                }
+        OPTIONAL { wd:${id} wdt:P2147 ?rotationPeriod. } # Rotation period
+        OPTIONAL { wd:${id} wdt:P223 ?galaxyMorphologicalType. } # Galaxy morphological type
+        OPTIONAL { wd:${id} wdt:P1457 ?absoluteMagnitude. } # Absolute magnitude
+        OPTIONAL { wd:${id} wdt:P2120 ?radius. } # Radius
+        OPTIONAL { wd:${id} wdt:P2386 ?diameter. } # Diameter
+        OPTIONAL { wd:${id} wdt:P18 ?image. } # Image
+      }
+      LIMIT 1
+    `);
+  return response.results?.bindings;
+};
+
+export const searchStarByNameDBP = async (name: String): Promise<any[]> => {
+  const resourceId = `:${name.replace(/ /g, "_")}`;
+  const response = await executeQuery(`
+  SELECT ?description ?image ?distance ?mass ?wikipedia
+  WHERE {
+      ${resourceId} a dbo:Star .
+      OPTIONAL {${resourceId} foaf:name ?name filter (lang(?name) = "en").}
+      OPTIONAL {${resourceId} dbo:abstract ?description FILTER(LANG(?description) = 'en') .}
+      OPTIONAL {${resourceId} dbo:thumbnail ?image .}
+      OPTIONAL {${resourceId} dbo:distance ?distance .}
+      OPTIONAL {${resourceId} dbo:mass ?mass .}
+      OPTIONAL {${resourceId} dbo:isPrimaryTopicOf ?wikipedia .}
+  }
+  LIMIT 1
+`);
+  return response.results?.bindings;
+};
+
+export const searchStarByNameWiki = async (
+  name: String
 ): Promise<AxiosResponse> => {
-  const resourceId: String = `${id}`;
-  return await executeWikiQuery(`
-    SELECT DISTINCT ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density (SAMPLE(?temperatureValueCenter) AS ?temperatureCenter) (SAMPLE(?temperatureValuePhotosphere) AS ?temperaturePhotosphere) (SAMPLE(?temperatureValueCorona) AS ?temperatureCorona) (SAMPLE(?areaValue) AS ?area) ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
+  const response = await executeWikiQuery(`
+      SELECT DISTINCT ?name ?description ?instanceType ?star
+      WHERE {
+        ?star rdfs:label ?name filter(lang(?name) = 'en').
+        ?star schema:description ?description filter(lang(?description) = 'en') .
+        ?star wdt:P31 ?instanceType.
+        VALUES ?instanceType {${listStarCodes
+          .map((code) => `wd:${code}`)
+          .join(" ")}}
+        ${
+          name !== ""
+            ? `FILTER(CONTAINS(LCASE(?name), "${name.toLowerCase()}"))`
+            : ""
+        } 
+      }
+      GROUP BY ?name ?description ?instanceType ?star
+      ORDER BY ?name
+      LIMIT 5
+    `);
+  return response.results?.bindings;
+};
+
+export const searchStarByIdWiki = async (id: String): Promise<any[]> => {
+  const response = await executeWikiQuery(`
+    SELECT DISTINCT ?name ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density (SAMPLE(?temperatureValueCenter) AS ?temperatureCenter) (SAMPLE(?temperatureValuePhotosphere) AS ?temperaturePhotosphere) (SAMPLE(?temperatureValueCorona) AS ?temperatureCorona) (SAMPLE(?areaValue) AS ?area) ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
     WHERE {
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-      ?star rdfs:label "${resourceId}"@en .
-      OPTIONAL { ?star wdt:P2067 ?mass. }
-      OPTIONAL { ?star wdt:P2120 ?radius. }
-      OPTIONAL { ?star wdt:P2583 ?distanceFromEarth. }
-      OPTIONAL { ?star wdt:P1102 ?flattening. }
-      OPTIONAL { ?star wdt:P215 ?spectralClass. }
-      OPTIONAL { ?star wdt:P2060 ?luminosity. }
-      OPTIONAL { ?star wdt:P1215 ?apparentMagnitude. }
-      OPTIONAL { ?star wdt:P1457 ?absoluteMagnitude. }
-      OPTIONAL { ?star wdt:P2227 ?metallicity. }
-      OPTIONAL { ?star wdt:P2054 ?density. }
+      wd:${id} rdfs:label ?name filter(lang(?name) = 'en') .
+      OPTIONAL { wd:${id} wdt:P2067 ?mass. }
+      OPTIONAL { wd:${id} wdt:P2120 ?radius. }
+      OPTIONAL { wd:${id} wdt:P2583 ?distanceFromEarth. }
+      OPTIONAL { wd:${id} wdt:P1102 ?flattening. }
+      OPTIONAL { wd:${id} wdt:P215 ?spectralClass. }
+      OPTIONAL { wd:${id} wdt:P2060 ?luminosity. }
+      OPTIONAL { wd:${id} wdt:P1215 ?apparentMagnitude. }
+      OPTIONAL { wd:${id} wdt:P1457 ?absoluteMagnitude. }
+      OPTIONAL { wd:${id} wdt:P2227 ?metallicity. }
+      OPTIONAL { wd:${id} wdt:P2054 ?density. }
       OPTIONAL {
-        ?star p:P2076 ?temperatureStatementCenter.
+        wd:${id} p:P2076 ?temperatureStatementCenter.
         ?temperatureStatementCenter ps:P2076 ?temperatureValueCenter.
         ?temperatureStatementCenter pq:P518 ?temperaturePartCenter.
         FILTER(?temperaturePartCenter = wd:Q23595)
       }
       OPTIONAL {
-        ?star p:P2076 ?temperatureStatementPhotosphere.
+        wd:${id} p:P2076 ?temperatureStatementPhotosphere.
         ?temperatureStatementPhotosphere ps:P2076 ?temperatureValuePhotosphere.
         ?temperatureStatementPhotosphere pq:P518 ?temperaturePartPhotosphere.
         FILTER(?temperaturePartPhotosphere = wd:Q6372)
       }
       OPTIONAL {
-        ?star p:P2076 ?temperatureStatementCorona.
+        wd:${id} p:P2076 ?temperatureStatementCorona.
         ?temperatureStatementCorona ps:P2076 ?temperatureValueCorona.
         ?temperatureStatementCorona pq:P518 ?temperaturePartCorona.
         FILTER(?temperaturePartCorona = wd:Q170754)
       }
       OPTIONAL {
-        ?star p:P2046 ?areaStatement.
+        wd:${id} p:P2046 ?areaStatement.
         ?areaStatement ps:P2046 ?areaValue.
       }
-      OPTIONAL { ?star wdt:P2234 ?volume. }
-      OPTIONAL { ?star wdt:P2547 ?perimeter. }
-      OPTIONAL { ?star wdt:P367 ?astronomicSymbolImage. }
-      OPTIONAL { ?star wdt:P398 ?childAstronomicalBody. }
-      OPTIONAL { ?star wdt:P397 ?parentAstronomicalBody. }
-      OPTIONAL { ?star wdt:P18 ?image. }
+      OPTIONAL { wd:${id} wdt:P2234 ?volume. }
+      OPTIONAL { wd:${id} wdt:P2547 ?perimeter. }
+      OPTIONAL { wd:${id} wdt:P367 ?astronomicSymbolImage. }
+      OPTIONAL { wd:${id} wdt:P398 ?childAstronomicalBody. }
+      OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. }
+      OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. 
+        ?parentAstronomicalBody rdfs:label ?parentAstronomicalBodyLabel filter (lang(?parentAstronomicalBodyLabel) = "en"). }
+      OPTIONAL { wd:${id} wdt:P18 ?image. }
 
     }
-    GROUP BY ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
+    GROUP BY ?name ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
     LIMIT 1
     `);
-};
-
-
-export const searchPlanetWikidata = async (
-  id: String
-): Promise<AxiosResponse> => {
-  const resourceId: String = `${id}`;
-  return await executeWikiQuery(`
-  SELECT DISTINCT ?mass ?radius ?distanceFromSun ?density ?orbitalPeriod ?rotationalPeriod ?escapeVelocity ?axialTilt ?meanTemperature ?surfacePressure ?numberOfMoons ?atmosphericComposition ?parentAstronomicalBody ?image
-    WHERE {
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-      ?planet rdfs:label "${resourceId}"@en .
-      OPTIONAL { ?planet wdt:P2067 ?mass. }
-      OPTIONAL { ?planet wdt:P2120 ?radius. }
-      OPTIONAL { ?planet wdt:P2227 ?density. }
-      OPTIONAL { ?planet wdt:P2224 ?orbitalPeriod. }
-      OPTIONAL { ?planet wdt:P376 ?rotationalPeriod. }
-      OPTIONAL { ?planet wdt:P2228 ?escapeVelocity. }
-      OPTIONAL { ?planet wdt:P2583 ?distanceFromSun. }
-      OPTIONAL { ?planet wdt:P354 ?axialTilt. }
-      OPTIONAL { ?planet wdt:P2076 ?meanTemperatureStatement.
-                ?meanTemperatureStatement ps:P2076 ?meanTemperatureValue.
-                FILTER(?meanTemperatureStatement = wd:Q20833) }
-      OPTIONAL { ?planet wdt:P2076 ?surfacePressureStatement.
-                ?surfacePressureStatement ps:P2076 ?surfacePressureValue.
-                FILTER(?surfacePressureStatement = wd:Q27610) }
-      OPTIONAL { ?planet wdt:P556 ?numberOfMoons. }
-      OPTIONAL { ?planet wdt:P189 ?atmosphericComposition. }
-      OPTIONAL { ?planet wdt:P397 ?parentAstronomicalBody. }
-      OPTIONAL { ?planet wdt:P18 ?image. }
-    }
-    LIMIT 1
-  
-  `);
-};
-
-export const searchGalaxyWikidata = async (
-  id: String
-): Promise<AxiosResponse> => {
-  const resourceId: String = `${id}`;
-  return await executeWikiQuery(`
-  SELECT DISTINCT ?mass ?radius ?distance ?type ?constellation ?image
-    WHERE {
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-      ?galaxy rdfs:label "${resourceId}"@en .
-      OPTIONAL { ?galaxy wdt:P2067 ?mass. }
-      OPTIONAL { ?galaxy wdt:P2120 ?radius. }
-      OPTIONAL { ?galaxy wdt:P2583 ?distance. }
-      OPTIONAL { ?galaxy wdt:P2920 ?type. }
-      OPTIONAL { ?galaxy wdt:P396 ?constellation. }
-      OPTIONAL { ?galaxy wdt:P18 ?image. }
-    }
-    LIMIT 1
-
-  `);
+  return response.results?.bindings;
 };
 
 export const getWikipediaImage = async (id: String) => {
@@ -390,6 +369,36 @@ export const getWikipediaImage = async (id: String) => {
     return imageUrl;
   } catch (error) {
     console.error("Error fetching Wikipedia image:", error);
+    return null;
+  }
+};
+
+export const getType = async (id: String) => {
+  const resourceId: String = `${id}`;
+  try {
+    const response = await executeWikiQuery(`
+    SELECT DISTINCT 
+      ?instanceType
+    WHERE {
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }      
+      wd:${resourceId} wdt:P31 ?instanceType
+    }
+    LIMIT 1
+  `);
+    const instanceType = response.results?.bindings[0].instanceType.value
+      .split("/")
+      .at(-1);
+    if (listGalaxyCodes.includes(instanceType)) {
+      return "galaxy";
+    } else if (listPlanetCodes.includes(instanceType)) {
+      return "planet";
+    } else if (listStarCodes.includes(instanceType)) {
+      return "star";
+    } else {
+      return "";
+    }
+  } catch (error) {
+    console.error("Error fetching type:", error);
     return null;
   }
 };
