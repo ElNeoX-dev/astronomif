@@ -59,7 +59,11 @@ export default function Home() {
           onChange={handleSearchChange}
           setIsFocused={setIsFocused}
         />
-        {isFocused && (
+        <div
+          className={`flex flex-row self-center justify-center ${
+            isFocused ? "filter-in" : ""
+          } ${!isFocused ? "filter-out" : ""}`}
+        >
           <SearchBox
             searchTerm={searchTerm}
             isLoading={isLoading}
@@ -68,17 +72,14 @@ export default function Home() {
             planetFilter={planetFilter}
             starFilter={starFilter}
           />
-        )}
+        </div>
       </div>
-      {
-        <div
-          className={`flex flex-row self-center ${
-            isFocused ? "filter-out" : ""
-          } ${!isFocused ? "filter-in" : ""}`}
-        ></div>
-      }
+
       <div className="flex flex-row self-center">
-        <div className="button-3d">
+        <div
+          className={`${isFocused ? "small-button-3d" : "normal-button-3d"}
+          }`}
+        >
           <CustomButton setState={setGalaxyFilter} state={galaxyFilter}>
             <GalaxyCanvas
               setHoverState={setIsHoverGalaxy}
@@ -88,7 +89,10 @@ export default function Home() {
             />
           </CustomButton>
         </div>
-        <div className="button-3d">
+        <div
+          className={`${isFocused ? "small-button-3d" : "normal-button-3d"}
+          }`}
+        >
           <CustomButton setState={setPlanetFilter} state={planetFilter}>
             <EarthCanvas
               setHoverState={setIsHoverPlanet}
@@ -99,7 +103,10 @@ export default function Home() {
             planetFilter
           </CustomButton>
         </div>
-        <div className="button-3d">
+        <div
+          className={`${isFocused ? "small-button-3d" : "normal-button-3d"}
+          }`}
+        >
           <CustomButton setState={setStarFilter} state={starFilter}>
             <SunCanvas
               setHoverState={setIsHoverStar}

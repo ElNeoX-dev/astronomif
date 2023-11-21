@@ -66,11 +66,48 @@ body {
   height: 100vh;
 }
 
-.button-3d {
+.normal-button-3d {
   width: min(30vh, 20vw);
   height: min(30vh, 20vw);
   margin-left: 5vw;
   margin-right: 5vw;
+  animation-duration: 0.7s;
+  animation-name: toNormal;
+  animation-timing-function: ease-in-out;
+}
+
+.small-button-3d {
+  width: min(20vh, 12vw);
+  height: min(20vh, 12vw);
+  margin-left: 5vw;
+  margin-right: 5vw;
+  animation-duration: 0.7s;
+  animation-name: toSmall;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes toNormal {
+  from {
+    width: min(20vh, 12vw);
+    height: min(20vh, 12vw);
+  }
+
+  to {
+    width: min(30vh, 20vw);
+    height: min(30vh, 20vw);
+  }
+}
+
+@keyframes toSmall {
+  from {
+    width: min(30vh, 20vw);
+    height: min(30vh, 20vw);
+  }
+
+  to {
+    width: min(20vh, 12vw);
+    height: min(20vh, 12vw);
+  }
 }
 
 .object-3d {
@@ -187,35 +224,37 @@ hr.rounded {
 }
 
 .filter-out {
-  margin-top: 100vh;
-  animation-duration: 0.7s;
-  animation-name: filterOut;
-  animation-timing-function: ease-in-out;
-}
-
-.filter-in {
-  margin-top: 40px;
+  overflow-y: hidden;
+  height: 0vh;
   animation-duration: 0.7s;
   animation-name: filterIn;
   animation-timing-function: ease-in-out;
 }
 
+.filter-in {
+  overflow-y: hidden;
+  height: 50vh;
+  animation-duration: 0.7s;
+  animation-name: filterOut;
+  animation-timing-function: ease-in-out;
+}
+
 @keyframes filterIn {
   from {
-    margin-top: 100vh;
+    height: 50vh;
   }
 
   to {
-    margin-top: 40px;
+    height: 0vh;
   }
 }
 
 @keyframes filterOut {
   from {
-    margin-top: 40px;
+    height: 0vh;
   }
 
   to {
-    margin-top: 100vh;
+    height: 50vh;
   }
 }
