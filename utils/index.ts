@@ -349,7 +349,7 @@ export const searchStarByIdWiki = async (id: String): Promise<any[]> => {
 export const getWikipediaImage = async (id: String) => {
   try {
     const { data } = await axios.get(
-      "https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php",
+      "https://en.wikipedia.org/w/api.php",
       {
         params: {
           action: "query",
@@ -357,6 +357,7 @@ export const getWikipediaImage = async (id: String) => {
           prop: "pageimages",
           pithumbsize: 300,
           format: "json",
+          origin: "*",
         },
       }
     );
