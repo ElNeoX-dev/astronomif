@@ -14,7 +14,7 @@ import {
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { renderSubSection, renderSection } from "@/utils/utils";
+import { renderSubSection, renderSection, renderSubSectionParent } from "@/utils/utils";
 
 interface StarProps {}
 
@@ -32,6 +32,7 @@ interface Star {
   distanceFromEarth?: string;
   luminosity?: string;
   parentAstronomicalBody?: string;
+  parentAstronomicalBodyLabel?: string;
   flattening?: string;
   spectralClass?: string;
   apparentMagnitude?: string;
@@ -48,6 +49,7 @@ interface Star {
   depictedBy?: string;
   notation?: string;
   describedBySource?: string;
+  typeParent?: string;
 }
 
 const Star: React.FC<StarProps> = () => {
@@ -57,6 +59,19 @@ const Star: React.FC<StarProps> = () => {
   const [loading, setLoading] = useState(true);
   const [star, setStar] = useState<Star>();
   const [modelPath, setModelPath] = useState("/models/unknown/scene.gltf"); // New state variable for model path
+
+  const handleParent = () => {
+    const parent = star!.parentAstronomicalBody!.split("/").at(-1);
+    if (star!.typeParent) {
+      return renderSubSectionParent(
+        "Parent",
+        star!.parentAstronomicalBodyLabel!,
+        `/${star!.typeParent}/${parent}`
+      );
+    } else {
+      return renderSubSection("Parent", star!.parentAstronomicalBodyLabel!);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -88,7 +103,7 @@ const Star: React.FC<StarProps> = () => {
 
           try {
             const imageURL = await getWikipediaImage(mergedStar.name as string);
-            mergedStar.imageURL = imageURL;
+            mergedStar.imageWikipedia = imageURL;
           } catch (error) {
             console.log(error);
           }
@@ -169,11 +184,10 @@ const Star: React.FC<StarProps> = () => {
                   )}
                 {star?.luminosity &&
                   renderSubSection("Luminosity", star.luminosity + " W")}
-                {star?.parentAstronomicalBody &&
-                  renderSubSection(
-                    "Parent Astronomical Body",
-                    star.parentAstronomicalBody
-                  )}
+                {star?.parentAstronomicalBodyLabel &&
+                  star?.parentAstronomicalBody &&
+                  star?.typeParent !== "" &&
+                  handleParent()}
                 {star?.area && renderSubSection("Area", star.area + " km²")}
                 {star?.volume &&
                   renderSubSection("Volume", star.volume + " km³")}

@@ -28,7 +28,7 @@ const About: React.FC<aboutProp> = () => {
   return (
     <>
       <Head>
-        <title>{(id || "Loading") as ReactNode}</title>
+        <title>About</title>
       </Head>
       <div className="flex flex-col gap-2 py-2 px-4 overflow-y-scroll">
         <div className="flex flex-row justify-start">
@@ -43,7 +43,7 @@ const About: React.FC<aboutProp> = () => {
             />
           </Link>
           <h1 className="title mb-15">
-            {(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}
+          About
           </h1>
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">

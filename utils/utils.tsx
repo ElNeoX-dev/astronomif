@@ -30,7 +30,7 @@ export const renderSubSectionParent = (
     <h1 className="subSectionTitle">{title}</h1>
     <hr className="rounded" />
     <ul className="list-disc">
-      <li>
+      <li className="underline" style={{ color: "yellow" }}>
         <Link href={link}>{description}</Link>
       </li>
     </ul>

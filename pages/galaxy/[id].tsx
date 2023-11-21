@@ -14,6 +14,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { renderSubSection, renderSection } from "@/utils/utils";
+import { split } from "postcss/lib/list";
 
 interface GalaxyProps {}
 
@@ -25,6 +26,18 @@ interface Galaxy {
   stars?: string;
   description?: string;
   wikipedia?: string;
+  mass?: string;
+  constellation?: string;
+  constellationLabel?: string;
+  childAstronomicalBody?: string;
+  childAstronomicalBodyLabel?: string;
+  parentAstronomicalBody?: string;
+  parentAstronomicalBodyLabel?: string;
+  rotationPeriod?: string;
+  galaxyMorphologicalType?: string;
+  absoluteMagnitude?: string;
+  radius?: string;
+  diameter?: string;
 }
 
 const Galaxy: React.FC<GalaxyProps> = () => {
@@ -52,8 +65,8 @@ const Galaxy: React.FC<GalaxyProps> = () => {
           const galaxyDBP = responseDBP.at(0);
 
           if (galaxyDBP) {
-            for (const key in galaxyWiki) {
-              galaxyWiki[key] = galaxyWiki[key]?.value;
+            for (const key in galaxyDBP) {
+              galaxyDBP[key] = galaxyDBP[key]?.value;
             }
           }
 
@@ -63,10 +76,11 @@ const Galaxy: React.FC<GalaxyProps> = () => {
           };
 
           setGalaxy(mergedGalaxy);
+          console.log(mergedGalaxy);
 
           try {
             const imageURL = await getWikipediaImage(id as string);
-            mergedGalaxy.imageURL = imageURL;
+            mergedGalaxy.imageWikipedia = imageURL;
           } catch (error) {
             console.log(error);
           }
@@ -74,11 +88,10 @@ const Galaxy: React.FC<GalaxyProps> = () => {
             galaxyWiki?.parentAstronomicalBody?.split("/").at(-1)!
           );
           mergedGalaxy.typeParent = type;
-          console.log(mergedGalaxy);
 
           setGalaxy(mergedGalaxy);
 
-          checkModelPath(id);
+          checkModelPath(mergedGalaxy.name);
         } else {
           alert("Galaxy not found");
         }
@@ -104,7 +117,7 @@ const Galaxy: React.FC<GalaxyProps> = () => {
   return (
     <>
       <Head>
-        <title>{(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}</title>
+        <title>{(galaxy ? galaxy.name : "Loading") as ReactNode}</title>
       </Head>
       <div className="flex py-2 px-4 flex-col flex-grow overflow-x-hidden overflow-y-auto hide-scrollbar">
         <div className="flex flex-row justify-galaxyt">
@@ -118,7 +131,7 @@ const Galaxy: React.FC<GalaxyProps> = () => {
             />
           </Link>
           <h1 className="title mb-15">
-            {(id ? id.replace(/_/g, " ") : "Loading") as ReactNode}
+            {(galaxy ? galaxy.name : "Loading") as ReactNode}
           </h1>
         </div>
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
@@ -138,11 +151,38 @@ const Galaxy: React.FC<GalaxyProps> = () => {
                 {galaxy?.type && renderSubSection("Type", galaxy.type + "")}
                 {galaxy?.stars &&
                   renderSubSection("Number of stars", galaxy.stars + "")}
+                {galaxy?.mass &&
+                  renderSubSection("Mass", galaxy.mass + " kg")}
+                {galaxy?.radius &&
+                  renderSubSection("Radius", galaxy.radius + " km")}
+                {galaxy?.diameter &&
+                  renderSubSection("Diameter", galaxy.diameter + " km")}
+                {galaxy?.absoluteMagnitude &&
+                  renderSubSection(
+                    "Absolute magnitude",
+                    galaxy.absoluteMagnitude + ""
+                  )}
+                {galaxy?.constellationLabel &&
+                  renderSubSection("Constellation", galaxy.constellationLabel + "")}
+                {galaxy?.childAstronomicalBody &&
+                  renderSubSection("Child Astronomical Body", galaxy.childAstronomicalBody + "")}
+                {galaxy?.parentAstronomicalBody &&
+                  renderSubSection("Parent Astronomical Body", galaxy.parentAstronomicalBody + "")}
               </span>
             </div>
             <div className="col-span-3 pr-3">
               {galaxy?.description &&
                 renderSection("Description", galaxy.description)}
+              {galaxy?.rotationPeriod &&
+                  renderSubSection(
+                    "Rotation period",
+                    galaxy.rotationPeriod + " days"
+                  )} 
+                {galaxy?.galaxyMorphologicalType &&
+                  renderSubSection(
+                    "Galaxy morphological type",
+                    galaxy.galaxyMorphologicalType + ""
+                  )} 
             </div>
           </div>
         </div>

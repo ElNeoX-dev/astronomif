@@ -265,6 +265,10 @@ hr.rounded {
   animation-timing-function: ease-in-out;
 }
 
+.underline {
+  text-decoration: underline;
+}
+
 @keyframes filterIn {
   from {
     height: 50vh;
