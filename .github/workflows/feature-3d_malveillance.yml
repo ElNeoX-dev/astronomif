@@ -59,4 +59,4 @@ jobs:
           app-name: 'malveillance'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_703B3532B78B457994F1623C8ABC27A4 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_ABDE11E48AD344338EA2F32B464B33B1 }}
