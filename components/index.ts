@@ -9,6 +9,7 @@ import GalaxyCanvas from "./GalaxyCanvas";
 import SunCanvas from "./SunCanvas";
 import CustomCanvas from "./CustomCanvas";
 import SaturnCanvas from "./SaturnCanvas";
+import Loader from "./Loader";
 
 export {
   Loading,
