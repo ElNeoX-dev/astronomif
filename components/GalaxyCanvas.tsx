@@ -1,16 +1,28 @@
-import React, { Suspense, useRef } from "react";
+"use client";
+import React, { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Preload, useGLTF, OrbitControls } from "@react-three/drei";
 import CanvasLoader from "./Loader";
 import * as THREE from "three";
 
-const Galaxy = () => {
-  const galaxy = useGLTF("/models/Galaxy/scene.gltf");
+interface GalaxyProps {
+  hoverState: Boolean;
+  activeState: Boolean;
+}
+
+const Galaxy: React.FC<GalaxyProps> = ({ hoverState, activeState }) => {
+  const galaxy = useGLTF("/models/Milky_Way/scene.gltf");
   const ref = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.rotation.y += 0.005;
+      if (hoverState) {
+        ref.current.rotation.y -= 0.02;
+      } else if (activeState) {
+        ref.current.rotation.y -= 0.01;
+      } else {
+        ref.current.rotation.y -= 0.005;
+      }
     }
   });
 
@@ -25,9 +37,27 @@ const Galaxy = () => {
   );
 };
 
-const GalaxyCanvas: React.FC = () => {
+interface GalaxyCanvasProps extends GalaxyProps {
+  setHoverState: React.Dispatch<React.SetStateAction<Boolean>>;
+  setActiveState: React.Dispatch<React.SetStateAction<Boolean>>;
+}
+
+const GalaxyCanvas: React.FC<GalaxyCanvasProps> = ({
+  hoverState,
+  setHoverState,
+  activeState,
+  setActiveState,
+}) => {
+  const handleMouseEnter = () => {
+    setHoverState(true);
+  };
+  const handleMouseLeave = () => {
+    setHoverState(false);
+  };
   return (
     <Canvas
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       shadows
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
@@ -39,8 +69,8 @@ const GalaxyCanvas: React.FC = () => {
       }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
-        <Galaxy />
+        <OrbitControls enableZoom={false} enablePan={false} />
+        <Galaxy hoverState={hoverState} activeState={activeState} />
         <Preload all />
       </Suspense>
     </Canvas>

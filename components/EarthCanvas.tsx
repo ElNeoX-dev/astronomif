@@ -1,16 +1,28 @@
-import React, { Suspense, useRef } from "react";
+"use client";
+import { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Preload, useGLTF, OrbitControls } from "@react-three/drei";
 import CanvasLoader from "./Loader";
 import * as THREE from "three";
 
-const Earth = () => {
+interface EarthProps {
+  hoverState: Boolean;
+  activeState: Boolean;
+}
+
+const Earth: React.FC<EarthProps> = ({ hoverState, activeState }) => {
   const earth = useGLTF("/models/Earth/scene.gltf");
   const ref = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.rotation.y += 0.005;
+      if (hoverState) {
+        ref.current.rotation.y += 0.02;
+      } else if (activeState) {
+        ref.current.rotation.y += 0.01;
+      } else {
+        ref.current.rotation.y += 0.005;
+      }
     }
   });
 
@@ -19,22 +31,46 @@ const Earth = () => {
   );
 };
 
-const Background = () => {
+const Background: React.FC<EarthProps> = ({ hoverState, activeState }) => {
   const stars = useGLTF("/models/Background_1/scene.gltf");
   const ref = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.rotation.y += 0.005;
+      if (activeState) {
+        ref.current.rotation.y += 0.01;
+      } else {
+        ref.current.rotation.y += 0.005;
+      }
     }
   });
 
-  return <primitive ref={ref} object={stars.scene} scale={8.0} position-y={0} />;
+  return (
+    <primitive ref={ref} object={stars.scene} scale={8.0} position-y={0} />
+  );
 };
 
-const EarthCanvas: React.FC = () => {
+interface EarthCanvasProps extends EarthProps {
+  setHoverState: React.Dispatch<React.SetStateAction<Boolean>>;
+  setActiveState: React.Dispatch<React.SetStateAction<Boolean>>;
+}
+
+const EarthCanvas: React.FC<EarthCanvasProps> = ({
+  hoverState,
+  setHoverState,
+  activeState,
+  setActiveState,
+}) => {
+  const handleMouseEnter = () => {
+    setHoverState(true);
+  };
+  const handleMouseLeave = () => {
+    setHoverState(false);
+  };
   return (
     <Canvas
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       shadows
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
@@ -46,9 +82,9 @@ const EarthCanvas: React.FC = () => {
       }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
-        <Earth />
-        <Background />
+        <OrbitControls enableZoom={false} enablePan={false} />
+        <Earth hoverState={hoverState} activeState={activeState} />
+        <Background hoverState={hoverState} activeState={activeState} />
 
         <Preload all />
       </Suspense>

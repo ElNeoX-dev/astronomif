@@ -1,16 +1,22 @@
+"use client";
 interface CustomButtonProps {
-  onClick: () => void;
   children?: React.ReactNode;
-  state: boolean;
+  setState: React.Dispatch<React.SetStateAction<Boolean>>;
+  state: Boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
-  onClick,
   children,
+  setState,
   state,
 }) => {
   return (
-    <button className="btn" onClick={onClick}>
+    <button
+      className={`btn ${state ? "active" : ""}`}
+      onClick={() => {
+        setState(!state);
+      }}
+    >
       {children}
     </button>
   );

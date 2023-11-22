@@ -1,3 +1,4 @@
+"use client";
 interface LoadingProps {}
 
 const Loading: React.FC<LoadingProps> = () => {

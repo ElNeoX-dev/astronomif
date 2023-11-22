@@ -1,30 +1,31 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
 interface ListItemProps {
-  imageUrl: string;
   title: string;
+  type: string;
   description: string;
   link: string;
 }
 
 const ListItem: React.FC<ListItemProps> = ({
-  imageUrl,
   title,
+  type,
   description,
   link,
 }) => {
   return (
     <Link href={link}>
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center justify-center p-3">
-          <div className="w-[200px] h-[200px] rounded-[50%] overflow-hidden">
-            <Image src={imageUrl} alt={title} layout="fill" objectFit="cover" />
+      <div className="flex flex-col items-center justify-center z-20 py-2 overflow-x-hidden">
+        <div className="flex flex-col items-center justify-center z-20 item p-2">
+          <div className="font-responsive font-bold text-center z-20">
+            {title}
           </div>
-          <div className="text-2xl font-bold text-center">{title}</div>
-          <div className="text-center">{description}</div>
+          <div className="font-responsive text-center z-20">
+            {description.substring(0, 150)}...
+          </div>
         </div>
-        <div className="mt-4"></div>
       </div>
     </Link>
   );
