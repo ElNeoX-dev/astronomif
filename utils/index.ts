@@ -215,7 +215,8 @@ export const searchGalaxyByIdWiki = async (id: string): Promise<any[]> => {
     SELECT DISTINCT 
         ?name
         ?mass 
-        ?constellation #?constellationLabel
+        ?constellation
+        ?constellationLabel
         ?childAstronomicalBody ?childAstronomicalBodyLabel 
         ?parentAstronomicalBody ?parentAstronomicalBodyLabel 
         ?rotationPeriod 
@@ -260,7 +261,7 @@ export const searchStarByNameDBP = async (name: String): Promise<any[]> => {
       OPTIONAL {${resourceId} dbo:thumbnail ?image .}
       OPTIONAL {${resourceId} dbo:distance ?distance .}
       OPTIONAL {${resourceId} dbo:mass ?mass .}
-      OPTIONAL {${resourceId} dbo:isPrimaryTopicOf ?wikipedia .}
+      OPTIONAL {${resourceId} foaf:isPrimaryTopicOf ?wikipedia .}
   }
   LIMIT 1
 `);
@@ -294,7 +295,7 @@ export const searchStarByNameWiki = async (
 
 export const searchStarByIdWiki = async (id: String): Promise<any[]> => {
   const response = await executeWikiQuery(`
-    SELECT DISTINCT ?name ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density (SAMPLE(?temperatureValueCenter) AS ?temperatureCenter) (SAMPLE(?temperatureValuePhotosphere) AS ?temperaturePhotosphere) (SAMPLE(?temperatureValueCorona) AS ?temperatureCorona) (SAMPLE(?areaValue) AS ?area) ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
+    SELECT DISTINCT ?name ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?parentAstronomicalBodyLabel ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density (SAMPLE(?temperatureValueCenter) AS ?temperatureCenter) (SAMPLE(?temperatureValuePhotosphere) AS ?temperaturePhotosphere) (SAMPLE(?temperatureValueCorona) AS ?temperatureCorona) (SAMPLE(?areaValue) AS ?area) ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
     WHERE {
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       wd:${id} rdfs:label ?name filter(lang(?name) = 'en') .
@@ -334,13 +335,12 @@ export const searchStarByIdWiki = async (id: String): Promise<any[]> => {
       OPTIONAL { wd:${id} wdt:P2547 ?perimeter. }
       OPTIONAL { wd:${id} wdt:P367 ?astronomicSymbolImage. }
       OPTIONAL { wd:${id} wdt:P398 ?childAstronomicalBody. }
-      OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. }
       OPTIONAL { wd:${id} wdt:P397 ?parentAstronomicalBody. 
         ?parentAstronomicalBody rdfs:label ?parentAstronomicalBodyLabel filter (lang(?parentAstronomicalBodyLabel) = "en"). }
       OPTIONAL { wd:${id} wdt:P18 ?image. }
 
     }
-    GROUP BY ?name ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
+    GROUP BY ?name ?mass ?radius ?distanceFromEarth ?luminosity ?parentAstronomicalBody ?parentAstronomicalBodyLabel ?flattening ?spectralClass ?apparentMagnitude ?absoluteMagnitude ?metallicity ?density ?volume ?perimeter ?astronomicSymbolImage ?depictedBy ?notation ?describedBySource
     LIMIT 1
     `);
   return response.results?.bindings;
@@ -384,8 +384,23 @@ export const getType = async (id: String) => {
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }      
       wd:${resourceId} wdt:P31 ?instanceType
     }
-    LIMIT 1
+    LIMIT 3
   `);
+    for (let i = 0; i < response.results?.bindings.length; i++) {
+      const instanceType = response.results?.bindings[i].instanceType.value
+        .split("/")
+        .at(-1);
+      console.log(instanceType);
+      if (listGalaxyCodes.includes(instanceType)) {
+        return "galaxy";
+      } else if (listPlanetCodes.includes(instanceType)) {
+        return "planet";
+      } else if (listStarCodes.includes(instanceType)) {
+        return "star";
+      }
+    }
+    return "";
+    /*
     const instanceType = response.results?.bindings[0].instanceType.value
       .split("/")
       .at(-1);
@@ -398,6 +413,7 @@ export const getType = async (id: String) => {
     } else {
       return "";
     }
+    */
   } catch (error) {
     console.error("Error fetching type:", error);
     return null;

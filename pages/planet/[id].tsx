@@ -100,7 +100,7 @@ const Planet: React.FC<PlanetProps> = () => {
 
           try {
             const imageURL = await getWikipediaImage(id as string);
-            mergedPlanet.imageURL = imageURL;
+            mergedPlanet.imageWikipedia = imageURL;
           } catch (error) {
             console.log(error);
           }
@@ -194,10 +194,6 @@ const Planet: React.FC<PlanetProps> = () => {
                   renderSubSection("Volume", planet.volume + "e14 km³")}
                 {planet?.radius &&
                   renderSubSection("Radius", planet.radius + " km")}
-                {planet?.discovered &&
-                  renderSubSection("Date of discovery", planet.discovered)}
-                {planet?.discoverer &&
-                  renderSubSection("Discoverer", planet.discoverer)}
                 {planet?.meanTemperature &&
                   planet?.minTemperature &&
                   planet?.maxTemperature &&
@@ -207,6 +203,16 @@ const Planet: React.FC<PlanetProps> = () => {
                     "Maximum: " + planet.maxTemperature + " K",
                     "Mean: " + planet.meanTemperature + " K"
                   )}
+                {planet?.meanTemperatureValue &&
+                  renderSubSection(
+                    "Mean temperature",
+                    planet.meanTemperatureValue + " °C"
+                  )}
+
+                {planet?.density &&
+                  renderSubSection("Density", planet.density + " g/cm³")}
+                {planet?.gravity &&
+                  renderSubSection("Gravity", planet.gravity + " m/s²")}
                 {planet?.satelliteOf &&
                   renderSubSection("Satellite of", planet.satelliteOf)}
                 {planet?.surfaceArea &&
@@ -216,20 +222,36 @@ const Planet: React.FC<PlanetProps> = () => {
                     "Distance from Earth",
                     planet.distanceFromEarth + " km"
                   )}
-                {planet?.rotationalPeriod &&
-                  renderSubSection(
-                    "Rotational Period",
-                    planet.rotationalPeriod + " days"
-                  )}
                 {planet?.parentAstronomicalBodyLabel &&
                   planet?.parentAstronomicalBody &&
                   planet?.typeParent !== "" &&
                   handleParent()}
+                {planet?.numberOfNaturalSatellites &&
+                  renderSubSection(
+                    "Number of natural satellites",
+                    planet.numberOfNaturalSatellites
+                  )}
               </span>
             </div>
             <div className="col-span-3 pr-3">
               {planet?.description &&
                 renderSection("Description", planet.description)}
+                {planet?.discovered &&
+                  renderSubSection("Date of discovery", planet.discovered)}
+                {planet?.discoverer &&
+                  renderSubSection("Discoverer", planet.discoverer)}
+                {planet?.rotationalPeriod &&
+                  renderSubSection(
+                    "Rotational Period",
+                    planet.rotationalPeriod + " days"
+                  )}
+                {planet?.orbitalPeriod &&
+                  renderSubSection(
+                    "Orbital period",
+                    planet.orbitalPeriod + " days"
+                  )}
+                {planet?.albedo &&
+                  renderSubSection("Albedo", planet.albedo + "%")}
             </div>
           </div>
         </div>
