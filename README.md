@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Ensure that you have a node version >=18.17.0 (it works for sure with node 20)
+
 First, install the packages of the app:
 
 ```bash
