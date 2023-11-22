@@ -117,6 +117,14 @@ body {
   margin-bottom: 10px;
 }
 
+.object-3d-about {
+  width: 30vw;
+  height: 100vw;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 60vw;
+}
+
 .input {
   width: min(300px, 80vw);
   height: min(6vh, 60px);

@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
-import { CustomCanvas } from "@/components";
+import { AboutCanvas } from "@/components";
 
 import Link from "next/link";
 import { renderSubSection } from "@/utils/utils";
@@ -15,7 +15,7 @@ const About: React.FC<aboutProp> = () => {
   const id = router.query.id as string;
 
   const [loading, setLoading] = useState(true);
-  const [modelPath, setModelPath] = useState("/models/unknown/scene.gltf"); // New state variable for model path
+  const [modelPath, setModelPath] = useState("/models/Earth/scene.gltf"); // New state variable for model path
 
   useEffect(() => {
     if (!id) return;
@@ -49,7 +49,9 @@ const About: React.FC<aboutProp> = () => {
         <div className="overflow-x-hidden overflow-y-scroll text-justify">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-1 ">
-              {/* <CustomCanvas modelPath={modelPath} /> */}
+            <div className="object-3d-about">
+              <AboutCanvas />
+              </div>
             </div>
             <div className="flex-grow md:col-span-2 overflow-x-hidden overflow-y-scroll text-justify">
               <span className="text-justify ">
