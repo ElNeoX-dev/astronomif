@@ -26,8 +26,9 @@ const prefixesWiki =
 const listGalaxyCodes = [
   // "Q318",
   "Q2488",
+  "Q2490"
 ];
-const listPlanetCodes = ["Q634", "Q128207"];
+const listPlanetCodes = ["Q634", "Q128207", "Q30014", "Q13205267", "Q3504248", "Q2199", "Q109645860"];
 const listStarCodes = [
   // "Q523",
   "Q5864",
