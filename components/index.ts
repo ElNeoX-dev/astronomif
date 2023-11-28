@@ -10,6 +10,8 @@ import SunCanvas from "./SunCanvas";
 import CustomCanvas from "./CustomCanvas";
 import SaturnCanvas from "./SaturnCanvas";
 import AboutCanvas from "./AboutCanvas";
+import Loader from "./Loader";
+
 
 export {
   Loading,
